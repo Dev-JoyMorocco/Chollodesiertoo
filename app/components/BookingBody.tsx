@@ -1062,7 +1062,7 @@ export function BookingBody({
                 disabled={isReserving}
                 className="group flex w-full cursor-pointer items-center rounded-full bg-white p-1 text-btn text-forest shadow-card-m disabled:cursor-not-allowed disabled:opacity-70"
               >
-                <span className="py-3 px-6 rounded-full text-white font-display bg-amber-500 group-hover:bg-yellow-500 group-disabled:bg-[#eab308] transition-colors duration-200 ease-out motion-reduce:transition-none">
+                <span className="py-3 px-6 rounded-full text-white font-display bg-amber-500 group-hover:bg-amber-600 group-disabled:bg-amber-500 transition-colors duration-200 ease-out motion-reduce:transition-none">
                   {isReserving ? (
                     t('booking.reserving', 'Reserving\u2026')
                   ) : (
