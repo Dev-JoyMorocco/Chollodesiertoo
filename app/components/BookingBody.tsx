@@ -857,7 +857,7 @@ export function BookingBody({
                           +€{transferPrice}
                         </p>
                       </div>
-                      <div className="shrink-0 self-stretch border-l-1 border-dashed border-primary" />
+                      <div className="shrink-0 self-stretch border-l border-dashed border-primary" />
                       <div className="flex shrink-0 flex-col justify-center gap-px px-4 font-bold text-left">
                         <span className="text-xs text-dark">
                           {travelers} {t('booking.travelers_word', 'Travelers')}
@@ -1005,7 +1005,7 @@ export function BookingBody({
                           +€{transferPrice}
                         </p>
                       </div>
-                      <div className="shrink-0 self-stretch border-l-1 border-dashed border-primary" />
+                      <div className="shrink-0 self-stretch border-l border-dashed border-primary" />
                       <div className="flex shrink-0 flex-col justify-center gap-px px-4 font-bold text-left">
                         <span className="text-xs text-dark">
                           {travelers} {t('booking.travelers_word', 'Travelers')}
@@ -1285,7 +1285,7 @@ function TicketCard({
           <p className="text-label-2xs uppercase text-forest font-bold -mb-1">{eyebrow}</p>
           <p className="font-display text-price text-forest">{price}</p>
         </div>
-        <div className="self-stretch border-l-1 border-dashed border-primary" />
+        <div className="self-stretch border-l border-dashed border-primary" />
         <p className="flex flex-1 items-center px-4 text-xs text-dark font-bold">
           {label}
         </p>
@@ -1320,7 +1320,7 @@ function SummaryTicket({
           <p className="text-label-2xs uppercase text-forest font-bold -mb-1">{eyebrow}</p>
           <p className="font-display text-price text-forest">{price}</p>
         </div>
-        <div className="self-stretch border-l-1 border-dashed border-primary" />
+        <div className="self-stretch border-l border-dashed border-primary" />
         <p className="flex flex-1 items-center px-4 text-xs text-dark font-bold">
           {label}
         </p>
