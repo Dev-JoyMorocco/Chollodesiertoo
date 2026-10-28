@@ -1062,7 +1062,7 @@ export function BookingBody({
                 disabled={isReserving}
                 className="group flex w-full cursor-pointer items-center rounded-full bg-white p-1 text-btn text-forest shadow-card-m disabled:cursor-not-allowed disabled:opacity-70"
               >
-                <span className="py-3 px-6 rounded-full text-white font-display bg-amber-500 group-hover:bg-amber-600 group-disabled:bg-amber-500 transition-colors duration-200 ease-out motion-reduce:transition-none">
+                <span className="py-3 px-6 rounded-full text-white font-display bg-amber-500 group-hover:bg-amber-550 group-disabled:bg-amber-500 transition-colors duration-200 ease-out motion-reduce:transition-none">
                   {isReserving ? (
                     t('booking.reserving', 'Reserving\u2026')
                   ) : (
@@ -1389,7 +1389,7 @@ function SegmentedControl({
           key={opt.value}
           type="button"
           onClick={() => onChange(opt.value)}
-          className={`rounded-full px- py-3 text-btn font-display w-full ${
+          className={`rounded-full py-3 text-btn font-display w-full ${
             opt.value === value ? 'bg-primary text-white' : 'text-dark'
           }`}
         >
