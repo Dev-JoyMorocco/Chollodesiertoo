@@ -63,7 +63,7 @@ export function AboutHero({
         <div className="mt-12 flex justify-center">
           <a
             href={ctaHref}
-            className="inline-flex items-center gap-2.5 rounded-full bg-primary px-9 py-4 font-display text-h3 text-white shadow-card-m btn-hover"
+            className="inline-flex items-center gap-2.5 rounded-full px-9 py-4 font-display text-h3 text-white btn-primary"
           >
             {ctaLabel ?? t('about.hero_cta', 'Book Your Adventure')}
             <span aria-hidden="true">&rarr;</span>

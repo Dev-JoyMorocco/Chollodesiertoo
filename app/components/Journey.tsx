@@ -215,7 +215,7 @@ export function Journey({
         <div aria-hidden="true" className="h-20 lg:mt-1 lg:ml-0.5 w-0 border-l-2 border-dashed border-primary/45" />
         <a
           href="/booking"
-          className="inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4.5 font-display text-btn text-sand shadow-card-m btn-hover"
+          className="inline-flex items-center gap-3 rounded-full px-8 py-4.5 font-display text-btn text-sand btn-primary"
         >
           {t('journey.cta', 'Start your Journey Today')}
           <span role="img" aria-label={t('aria.journey.emoji_quote', 'Winking face')} className="leading-none">{t('journey.cta_emoji', '\u{1F609}')}</span>

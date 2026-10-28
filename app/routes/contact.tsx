@@ -223,8 +223,8 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled
-                className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-primary px-7 py-3
-                           font-display text-btn text-sand btn-hover disabled:opacity-50"
+                className="mt-6 inline-flex items-center gap-2.5 rounded-full px-7 py-3
+                           font-display text-btn text-sand btn-primary disabled:opacity-50"
               >
                 {form?.labelPrimary || t('contact.form_cta', 'Send message')}
               </button>

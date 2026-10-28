@@ -46,6 +46,7 @@
   /* Shadows */
   --shadow-card:      0 0.2rem .5rem rgba(0, 0, 0, 0.1);
   --shadow-card-m:    0 0.25rem .5rem rgba(0, 0, 0, 0.15);
+  --shadow-btn:       0 0.375rem 1rem rgba(199, 70, 14, 0.3);
   --shadow-btn-hover: 0 0.75rem 2rem rgba(199, 70, 14, 0.4);
   --shadow-whatsapp:       0 0.375rem 1rem rgba(0, 153, 57, 0.3);
   --shadow-whatsapp-hover: 0 0.75rem 2rem rgba(0, 153, 57, 0.45);
@@ -96,34 +97,57 @@ a { text-decoration: none; }
   } 
 }
 
-/* ─── Button hover — single source for every CTA ───
+/* ─── Orange CTA — single source for every orange button ───
+   Owns its default background + shadow (like .btn-whatsapp) so the hover is a
+   single-value change that the browser can fade. Don't combine with bg-* / shadow-*.
+   .btn-primary       background + shadow
+   .btn-primary-flat  background only (TourRoutes cards)
+   .btn-hover-target  orange icon inside a .group button (video play) */
+.btn-primary,
+.btn-primary-flat,
+.btn-hover-target {
+  background-color: var(--color-primary);
+  transition-property: background-color, box-shadow;
+  transition-duration: var(--duration-btn);
+  transition-timing-function: var(--ease-btn);
+}
+.btn-primary {
+  box-shadow: var(--shadow-btn);
+}
+.btn-primary:not(:disabled),
+.btn-primary-flat:not(:disabled) {
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .btn-primary:hover:not(:disabled),
+  .group:hover:not(:disabled) .btn-hover-target {
+    background-color: var(--color-primary-hover);
+    box-shadow: var(--shadow-btn-hover);
+  }
+  .btn-primary-flat:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+  }
+}
+
+/* ─── Button hover — booking controls (stepper, calendar, toggles, cards) ───
    Only background colour and shadow change; buttons must never move
    (no translate/scale). Unlayered so it wins over bg-*/shadow-* utilities.
    .btn-hover         background + shadow
-   .btn-hover-flat    background only
-   .btn-hover-shadow  shadow only (selectable cards)
-   .btn-hover-target  child of a .group button (e.g. play icon inside a poster) */
+   .btn-hover-shadow  shadow only (selectable cards) */
 .btn-hover,
-.btn-hover-flat,
-.btn-hover-shadow,
-.btn-hover-target {
+.btn-hover-shadow {
   transition-property: background-color, box-shadow, border-color, color;
   transition-duration: var(--duration-btn);
   transition-timing-function: var(--ease-btn);
 }
 .btn-hover:not(:disabled),
-.btn-hover-flat:not(:disabled),
 .btn-hover-shadow:not(:disabled) {
   cursor: pointer;
 }
 @media (hover: hover) {
-  .btn-hover:hover:not(:disabled),
-  .group:hover:not(:disabled) .btn-hover-target {
+  .btn-hover:hover:not(:disabled) {
     background-color: var(--color-primary-hover);
     box-shadow: var(--shadow-btn-hover);
-  }
-  .btn-hover-flat:hover:not(:disabled) {
-    background-color: var(--color-primary-hover);
   }
   .btn-hover-shadow:hover:not(:disabled) {
     box-shadow: var(--shadow-btn-hover);
@@ -131,7 +155,7 @@ a { text-decoration: none; }
 }
 
 /* ─── WhatsApp button — single source for every WhatsApp CTA ───
-   Same rule as .btn-hover: only background colour and shadow change on hover. */
+   Same rule as .btn-primary: only background colour and shadow change on hover. */
 .btn-whatsapp {
   background-color: var(--color-whatsapp);
   box-shadow: var(--shadow-whatsapp);

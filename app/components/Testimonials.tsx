@@ -176,8 +176,7 @@ export function Testimonials({
         <div className="mt-[clamp(40px,5vw,64px)] flex flex-wrap justify-center gap-4">
           <a
             href={primaryCtaHref}
-            className="inline-block rounded-full bg-primary px-10 py-4 font-display text-btn text-white
-                       shadow-card-m btn-hover"
+            className="inline-block rounded-full px-10 py-4 font-display text-btn text-white btn-primary"
           >
             {primaryCtaLabel ?? t('reviews.cta_primary', 'Book the Journey Now')}
           </a>

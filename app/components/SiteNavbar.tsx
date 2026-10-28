@@ -116,7 +116,7 @@ function BookButton({ fullWidth = false }: { fullWidth?: boolean }) {
   return (
     <Link
       to="/booking"
-      className={`font-display text-btn text-sand text-center bg-primary rounded-full px-7 py-2 btn-hover whitespace-nowrap ${fullWidth ? 'w-full' : ''}`}
+      className={`font-display text-btn text-sand text-center rounded-full px-7 py-2 btn-primary whitespace-nowrap ${fullWidth ? 'w-full' : ''}`}
     >
       {t('nav.book_now', 'Book Now')}
     </Link>
