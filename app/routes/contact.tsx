@@ -107,8 +107,7 @@ export default function ContactPage() {
                     href={whatsappUrl}
                     aria-label={t('aria.contact.whatsapp', 'Chat with us on WhatsApp')}
                     className="mt-6 inline-flex items-center justify-center gap-2.5 self-start rounded-full
-                               bg-primary px-7 py-3 font-display text-btn text-sand
-                               btn-hover"
+                               px-7 py-3 font-display text-btn btn-whatsapp"
                   >
                     <WhatsAppIcon />
                     {whatsapp?.labelPrimary || t('contact.whatsapp_cta', 'Chat on WhatsApp')}
@@ -118,7 +117,7 @@ export default function ContactPage() {
                     <span
                       aria-disabled="true"
                       className="mt-6 inline-flex items-center justify-center gap-2.5 self-start rounded-full
-                                 bg-primary/50 px-7 py-3 font-display text-btn text-sand"
+                                 px-7 py-3 font-display text-btn btn-whatsapp"
                     >
                       <WhatsAppIcon />
                       {whatsapp?.labelPrimary || t('contact.whatsapp_cta', 'Chat on WhatsApp')}

@@ -1112,7 +1112,7 @@ export function BookingBody({
               <a
                 href={whatsappHref}
                 aria-label={t('booking.aria_whatsapp', 'Chat with us on WhatsApp')}
-                className="flex items-center justify-center gap-2.5 rounded-full bg-green-600 px-5 py-3.25 text-btn font-display text-white"
+                className="flex items-center justify-center gap-2.5 rounded-full px-5 py-3.25 text-btn font-display btn-whatsapp"
               >
                 <WhatsAppIcon />
                 {t('booking.whatsapp_cta', 'Chat on WhatsApp')}
