@@ -287,7 +287,7 @@ export function CampTiers({
           <a
             href={ctaHref}
             className="inline-block rounded-full bg-primary px-14 py-4 font-display text-btn text-white
-                       shadow-card transition-colors hover:bg-primary/90"
+                       shadow-card btn-hover"
           >
             {ctaLabel ?? t('camps.cta', 'Book Now')}
           </a>

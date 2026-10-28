@@ -108,7 +108,7 @@ export default function ContactPage() {
                     aria-label={t('aria.contact.whatsapp', 'Chat with us on WhatsApp')}
                     className="mt-6 inline-flex items-center justify-center gap-2.5 self-start rounded-full
                                bg-primary px-7 py-3 font-display text-btn text-sand
-                               transition-opacity hover:opacity-90"
+                               btn-hover"
                   >
                     <WhatsAppIcon />
                     {whatsapp?.labelPrimary || t('contact.whatsapp_cta', 'Chat on WhatsApp')}
@@ -225,7 +225,7 @@ export default function ContactPage() {
                 type="submit"
                 disabled
                 className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-primary px-7 py-3
-                           font-display text-btn text-sand disabled:opacity-50"
+                           font-display text-btn text-sand btn-hover disabled:opacity-50"
               >
                 {form?.labelPrimary || t('contact.form_cta', 'Send message')}
               </button>

@@ -52,7 +52,7 @@ export function Hero({
         <div className="flex flex-wrap gap-3.5 justify-center mb-6">
           <a
             href="/booking"
-            className="font-display text-btn bg-primary text-sand px-8 py-3.5 rounded-full hover:opacity-90 transition-opacity"
+            className="font-display text-btn bg-primary text-sand px-8 py-3.5 rounded-full btn-hover"
           >
             {t('hero.cta_primary', 'Book Your Adventure →')}
           </a>

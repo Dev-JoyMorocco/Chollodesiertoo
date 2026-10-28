@@ -301,10 +301,10 @@ export function CapturedByTribe({
                   type="button"
                   aria-label={t('aria.gallery.play_video', 'Play video: {name}', {name: item.alt})}
                   onClick={(e) => handleCardClick(e, item)}
-                  className="absolute inset-0 flex items-center justify-center"
+                  className="group absolute inset-0 flex items-center justify-center"
                 >
                   <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-                    <span className="play-btn-shadow flex h-10 w-10 items-center justify-center rounded-full bg-primary z-10">
+                    <span className="play-btn-shadow btn-hover-target flex h-10 w-10 items-center justify-center rounded-full bg-primary z-10">
                       <svg width="14" height="16" viewBox="0 0 22 24" fill="none" aria-hidden="true">
                         <path
                           d="M3 2.6c0-1.2 1.3-1.95 2.34-1.34l13.2 8.9c.97.65.97 2.07 0 2.72l-13.2 8.9C4.3 23.4 3 22.6 3 21.4V2.6Z"

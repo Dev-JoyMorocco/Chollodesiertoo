@@ -151,9 +151,7 @@ export function SiteFooter({
             href={ctaHref}
             className="mt-8 md:mt-10 inline-flex items-center gap-3 rounded-full font-display
                        text-white text-btn px-7 md:px-10 py-3.5 md:py-4
-                       bg-gradient-to-b from-[#cc6533] to-primary
-                       shadow-card-m
-                       transition-transform duration-200 hover:-translate-y-0.5"
+                       bg-primary shadow-card-m btn-hover"
           >
             {t('footer.cta', 'Book Your Adventure Today')}
             <svg

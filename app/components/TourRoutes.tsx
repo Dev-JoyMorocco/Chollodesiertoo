@@ -218,7 +218,7 @@ function PriceBar({route}: {route: Route}) {
       </div>
       <a
         href={route.href}
-        className="ml-aut flex h-15 items-center gap-2 whitespace-nowrap rounded-full bg-primary px-6 text-btn font-display text-white"
+        className="ml-aut flex h-15 items-center gap-2 whitespace-nowrap rounded-full bg-primary px-6 text-btn font-display text-white btn-hover-flat"
       >
         {t('routes.cta', 'Choose this route')} <span aria-hidden="true">→</span>
       </a>
