@@ -50,6 +50,10 @@
   --shadow-whatsapp:       0 0.375rem 1rem rgba(0, 153, 57, 0.3);
   --shadow-whatsapp-hover: 0 0.75rem 2rem rgba(0, 153, 57, 0.45);
 
+  /* Button hover transition — colour + shadow only, so it stays on under reduced motion */
+  --ease-btn: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-btn: 0.35s;
+
   /* Type scale (fluid) */
   --text-route-heading:    clamp(2rem, 4.4vw, 3.1rem);
   --text-route-subheading: clamp(1.0625rem, 1.6vw, 1.25rem);
@@ -103,11 +107,9 @@ a { text-decoration: none; }
 .btn-hover-flat,
 .btn-hover-shadow,
 .btn-hover-target {
-  transition:
-    background-color 0.25s ease-out,
-    box-shadow 0.25s ease-out,
-    border-color 0.25s ease-out,
-    color 0.25s ease-out;
+  transition-property: background-color, box-shadow, border-color, color;
+  transition-duration: var(--duration-btn);
+  transition-timing-function: var(--ease-btn);
 }
 .btn-hover:not(:disabled),
 .btn-hover-flat:not(:disabled),
@@ -127,14 +129,6 @@ a { text-decoration: none; }
     box-shadow: var(--shadow-btn-hover);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .btn-hover,
-  .btn-hover-flat,
-  .btn-hover-shadow,
-  .btn-hover-target {
-    transition: none;
-  }
-}
 
 /* ─── WhatsApp button — single source for every WhatsApp CTA ───
    Same rule as .btn-hover: only background colour and shadow change on hover. */
@@ -143,9 +137,9 @@ a { text-decoration: none; }
   box-shadow: var(--shadow-whatsapp);
   color: #fff;
   cursor: pointer;
-  transition:
-    background-color 0.25s ease-out,
-    box-shadow 0.25s ease-out;
+  transition-property: background-color, box-shadow;
+  transition-duration: var(--duration-btn);
+  transition-timing-function: var(--ease-btn);
 }
 @media (hover: hover) {
   .btn-whatsapp:hover:not([aria-disabled='true']) {
@@ -156,11 +150,6 @@ a { text-decoration: none; }
 .btn-whatsapp[aria-disabled='true'] {
   cursor: not-allowed;
   opacity: 0.5;
-}
-@media (prefers-reduced-motion: reduce) {
-  .btn-whatsapp {
-    transition: none;
-  }
 }
 
 /* ─── Price underline accent ─── */
