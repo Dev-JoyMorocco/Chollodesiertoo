@@ -67,14 +67,18 @@ export function BlogIndex({
       {/* ── Hero — shared with /booking, /contact, /faq and /reviews ── */}
       <PageHero
         ariaLabel={t('aria.blog.hero', 'Journal')}
-        heading={title || t('blog.heading', 'Notes from the desert.')}
+        heading={title || t('blog.heading', 'Stories from the road.')}
         subtext={
           subtitle ||
-          t('blog.hero_subtext', 'Field notes, routes and small lessons from the Sahara.')
+          t(
+            'blog.hero_subtext',
+            'Guides, tips, and tales from the Sahara\nwritten by people who actually live here.',
+          )
         }
         image={heroImage?.src}
         imageAlt={heroImage?.alt || ''}
         loading="eager"
+        underlineLastWord
       />
 
       <div className="mx-auto max-w-316 px-6 pb-24 pt-6">
