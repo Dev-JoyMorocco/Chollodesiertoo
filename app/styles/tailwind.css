@@ -242,7 +242,7 @@ a { text-decoration: none; }
      is tall (33.64 x 6.16), so it is stretched to the width of the word and
      given a fixed height rather than keeping its aspect ratio. */
   height: 0.6rem;
-  background: url('../assets/underline-dark.svg') no-repeat center / 100% 100%;
+  background: url('../assets/underline-light.svg') no-repeat center / 100% 100%;
 }
 
 /* For the same underline on a dark ground, where the orange would disappear. */

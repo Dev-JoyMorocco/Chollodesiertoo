@@ -1,5 +1,6 @@
 import {SafeImage} from './SafeImage';
 import {useT} from '~/lib/ui-strings';
+import {Underline} from './Underline';
 
 interface Camp {
   name: string;
@@ -146,7 +147,7 @@ export function CampTiers({
             {eyebrow}
           </p>
           <div className="mt-2 flex justify-center">
-            <LightningDivider />
+            <Underline />
           </div>
           <h2 className="mt-5 text-h3 md:text-h2 font-display text-dark">
             {heading}
@@ -299,16 +300,6 @@ export function CampTiers({
 }
 
 // ── Sub-components ──────────────────────────────────────────────
-
-function LightningDivider() {
-  return (
-          <svg width="64" height="16" viewBox="0 0 64 16" fill="none">
-            <svg width="50" height="18" viewBox="0 0 50 18" fill="none" aria-hidden="true">
-              <path d="M3 10 L25 6 L20 10 L40 9" stroke="#C15A2B" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </svg>
-  );
-}
 
 function CheckIcon({className = ''}: {className?: string}) {
   return (

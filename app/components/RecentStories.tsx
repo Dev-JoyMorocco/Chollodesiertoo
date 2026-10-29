@@ -1,6 +1,7 @@
 import {Link} from 'react-router';
 import {SafeImage} from './SafeImage';
 import {useT} from '~/lib/ui-strings';
+import {Underline} from './Underline';
 
 export interface Story {
   href: string;
@@ -46,7 +47,7 @@ export function RecentStories({
             <span className="text-[14px] font-semibold uppercase tracking-[0.08em] text-primary">
               {eyebrow || t('post.recent_eyebrow', 'Recent Stories')}
             </span>
-            <Squiggle />
+            <Underline />
           </div>
           <h2 className="mb-3 font-display text-[clamp(1.75rem,3.4vw,38px)] font-bold leading-tight text-dark md:leading-[46px]">
             {title || t('post.recent_heading', 'From the Sahara')}
@@ -118,26 +119,6 @@ function StoryCard({story}: {story: Story}) {
         {meta && <p className="text-xs font-medium text-dark/70">{meta}</p>}
       </div>
     </Link>
-  );
-}
-
-function Squiggle() {
-  return (
-    <svg
-      width="52"
-      height="8"
-      viewBox="0 0 52 8"
-      fill="none"
-      aria-hidden="true"
-      className="text-primary"
-    >
-      <path
-        d="M1 5.5C6 1.5 11 1.5 16 5.5C21 9.5 26 9.5 31 5.5C36 1.5 41 1.5 46 5.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
   );
 }
 
