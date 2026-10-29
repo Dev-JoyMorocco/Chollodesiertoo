@@ -105,8 +105,13 @@ function StoryCard({story}: {story: Story}) {
         {story.category && (
           <span className="absolute bottom-8 left-1/2 z-2 inline-flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap font-display text-xs font-bold text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.5)]">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
-              <path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path
+                d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <circle cx="8" cy="8" r="1.5" fill="currentColor" />
             </svg>
             {story.category}
           </span>

@@ -1,5 +1,6 @@
 import type {ReactNode} from 'react';
 import {SafeImage} from './SafeImage';
+import {Underline} from './Underline';
 
 interface ArticleImage {
   src: string;
@@ -35,7 +36,7 @@ export function BlogArticle({
   const meta = [date, readTime].filter(Boolean).join(' · ');
 
   return (
-    <article className="bg-white font-body">
+    <article className="bg-sand font-body">
       {/* ── Hero ── */}
       <header className="relative flex h-[502px] flex-col overflow-hidden bg-sand">
         {heroImage?.src && (
@@ -51,7 +52,7 @@ export function BlogArticle({
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(180deg, rgba(120,58,20,0.30) 0%, rgba(120,58,20,0.12) 45%, rgba(247,241,230,0.85) 92%, #F7F1E6 100%)',
+              'linear-gradient(180deg, rgba(120,58,20,0.30) 0%, rgba(120,58,20,0.12) 45%, rgb(245 237 224 / 0.85) 92%, var(--color-sand) 100%)',
           }}
         />
 
@@ -61,6 +62,7 @@ export function BlogArticle({
           <h1 className="m-0 mb-7.5 max-w-200 font-display text-[clamp(1.75rem,4vw,42px)] font-bold leading-tight text-white text-balance [text-shadow:0_2px_20px_rgba(60,25,8,0.4)] md:leading-[54px]">
             {title}
           </h1>
+          <Underline tone="light" className="-mt-3 mb-4" />
           {meta && (
             <p className="m-0 text-xs font-medium text-white [text-shadow:0_1px_10px_rgba(60,25,8,0.35)]">
               {meta}
@@ -69,18 +71,22 @@ export function BlogArticle({
         </div>
       </header>
 
-      {/* ── Featured image, overlapping the hero ── */}
+      {/* ── Featured image, overlapping the hero — same column as the body ── */}
       {featuredImage?.src && (
-        <figure className="relative z-20 mx-auto -mt-11.25 w-162.5 max-w-[calc(100%-48px)]">
-          <div className="aspect-[650/390] overflow-hidden rounded-2xl shadow-card-m">
-            <SafeImage
-              src={featuredImage.src}
-              alt={featuredImage.alt}
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
+        <div className="relative z-20 mx-auto -mt-20 max-w-316 px-6">
+          <div className="grid grid-cols-12 gap-6">
+            <figure className="col-span-12 md:col-span-8 md:col-start-3">
+              <div className="aspect-[802/390] overflow-hidden rounded-2xl shadow-card-m">
+                <SafeImage
+                  src={featuredImage.src}
+                  alt={featuredImage.alt}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            </figure>
           </div>
-        </figure>
+        </div>
       )}
 
       {/* ── Body ── */}
