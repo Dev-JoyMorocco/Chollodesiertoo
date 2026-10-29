@@ -290,6 +290,26 @@ function addDays(d: Date, n: number) {
   return copy;
 }
 
+/** "Today" for bookings is Morocco's today, whatever the server or visitor clock says. */
+const BOOKING_TIME_ZONE = 'Africa/Casablanca';
+
+/**
+ * Tomorrow's calendar day in Morocco, as a local-midnight Date — the shape
+ * buildMonthCells and toIsoDate work with. The Date constructor rolls the
+ * day over month and year ends (31 Oct → 1 Nov, 31 Dec → 1 Jan).
+ */
+function moroccoTomorrow(now = new Date()): Date {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: BOOKING_TIME_ZONE,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  }).formatToParts(now);
+  const part = (type: 'year' | 'month' | 'day') =>
+    Number(parts.find((p) => p.type === type)?.value);
+  return new Date(part('year'), part('month') - 1, part('day') + 1);
+}
+
 function buildMonthCells(
   year: number,
   monthIndex: number,
@@ -386,16 +406,19 @@ export function BookingBody({
   const [monthOffset, setMonthOffset] = useState(0);
   const [openFaq, setOpenFaq] = useState(-1);
   const DEFAULT_TRIP_DAYS = 2;
-  const [departDate, setDepartDate] = useState(() => new Date());
-  const [returnDate, setReturnDate] = useState(() => addDays(new Date(), DEFAULT_TRIP_DAYS),);
-  // Which month the left-hand pane starts on, fixed at mount. Deriving it from
-  // departDate meant that picking a day in the right-hand pane pushed the base
-  // forward a month, so both panes jumped and the day you clicked slid out of
-  // view. Only the arrows move the view now.
-  const [monthAnchor] = useState(() => {
-    const d = new Date();
-    return {year: d.getFullYear(), month: d.getMonth()};
-  });
+  // Defaults to tomorrow in Morocco. Server and browser both resolve the same
+  // day, so the first render hydrates without a date mismatch.
+  const [departDate, setDepartDate] = useState(() => moroccoTomorrow());
+  const [returnDate, setReturnDate] = useState(() => addDays(departDate, DEFAULT_TRIP_DAYS));
+  // Which month the left-hand pane starts on, fixed at mount: the default
+  // departure's month, so 31 Oct opens on November. Deriving it from departDate
+  // on every render meant that picking a day in the right-hand pane pushed the
+  // base forward a month, so both panes jumped and the day you clicked slid out
+  // of view. Only the arrows move the view now.
+  const [monthAnchor] = useState(() => ({
+    year: departDate.getFullYear(),
+    month: departDate.getMonth(),
+  }));
   // Defaults to a single traveler; the shopper adjusts from there.
   const [travelers, setTravelers] = useState(1);
   const [extraQtys, setExtraQtys] = useState<Record<string, number>>(() =>
