@@ -150,7 +150,7 @@ export function BlogIndex({
             <button
               type="button"
               onClick={() => setShown((s) => s + pageSize)}
-              className="h-13 rounded-full bg-white px-9 font-display text-[18px] font-bold text-primary shadow-card-m btn-smooth hover:bg-primary hover:text-white"
+              className="h-13 rounded-full px-9 font-display text-[18px] font-bold btn-light"
             >
               {t('blog.load_more', 'Load more')} <span aria-hidden="true">&darr;</span>
             </button>

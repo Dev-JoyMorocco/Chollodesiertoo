@@ -141,7 +141,7 @@ a { text-decoration: none; }
   transition-duration: var(--duration-btn);
   transition-timing-function: var(--ease-btn);
 }
-.btn-light {                        /* stepper +/- */
+.btn-light {                        /* white pill: stepper +/-, See All Stories, Load more */
   background-color: #fff;
   color: var(--color-primary);
   box-shadow: var(--shadow-card);

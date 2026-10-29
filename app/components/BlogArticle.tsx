@@ -56,15 +56,16 @@ export function BlogArticle({
           }}
         />
 
-        {/* SiteNavbar is positioned by the page, so the copy clears it here. */}
+        {/* SiteNavbar is positioned by the page, so the copy clears it here.
+            Type matches PageHero, the hero on every other page. */}
         <div className="relative z-10 flex flex-col items-center px-6 pt-27.5 text-center">
           {breadcrumb && <div className="mb-5">{breadcrumb}</div>}
-          <h1 className="m-0 mb-7.5 max-w-200 font-display text-[clamp(1.75rem,4vw,42px)] font-bold leading-tight text-white text-balance [text-shadow:0_2px_20px_rgba(60,25,8,0.4)] md:leading-[54px]">
+          <h1 className="font-display text-hero max-w-180 text-white text-balance">
             {title}
           </h1>
-          <Underline tone="light" className="-mt-3 mb-4" />
+          <Underline tone="light" className="mt-4" />
           {meta && (
-            <p className="m-0 text-xs font-medium text-white [text-shadow:0_1px_10px_rgba(60,25,8,0.35)]">
+            <p className="mt-6 text-lg text-white md:text-h3">
               {meta}
             </p>
           )}

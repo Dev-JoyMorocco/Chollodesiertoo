@@ -70,7 +70,7 @@ export function RecentStories({
         <div className="mt-16 flex justify-center">
           <Link
             to={ctaHref}
-            className="inline-flex h-13 items-center gap-1.5 rounded-full bg-white px-9 font-display text-[18px] font-bold text-primary shadow-card-m btn-smooth hover:bg-primary hover:text-white"
+            className="inline-flex h-13 items-center gap-1.5 rounded-full px-9 font-display text-[18px] font-bold btn-light"
           >
             {ctaLabel || t('post.see_all', 'See All Stories')}{' '}
             <span aria-hidden="true">&rarr;</span>
