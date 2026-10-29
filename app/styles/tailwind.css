@@ -129,29 +129,80 @@ a { text-decoration: none; }
   }
 }
 
-/* ─── Button hover — booking controls (stepper, calendar, toggles, cards) ───
-   Only background colour and shadow change; buttons must never move
-   (no translate/scale). Unlayered so it wins over bg-*/shadow-* utilities.
-   .btn-hover         background + shadow
-   .btn-hover-shadow  shadow only (selectable cards) */
-.btn-hover,
-.btn-hover-shadow {
+/* ─── Booking controls — each class owns its default, selected and hover
+   state (like .btn-primary) so the hover is a single fade. Colour + shadow only. ─── */
+.btn-light,
+.btn-dark,
+.btn-day,
+.btn-segment,
+.btn-card {
+  cursor: pointer;
   transition-property: background-color, box-shadow, border-color, color;
   transition-duration: var(--duration-btn);
   transition-timing-function: var(--ease-btn);
 }
-.btn-hover:not(:disabled),
-.btn-hover-shadow:not(:disabled) {
-  cursor: pointer;
+.btn-light {                        /* stepper +/- */
+  background-color: #fff;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-card);
+}
+.btn-dark {                         /* calendar month arrows */
+  background-color: var(--color-dark);
+  color: #fff;
+  box-shadow: 0 0 0 transparent;
+}
+.btn-day {                          /* calendar day */
+  background-color: transparent;
+  color: rgb(26 31 46 / 0.8);
+  box-shadow: 0 0 0 transparent;
+}
+.btn-day[data-state='range'] {
+  background-color: rgb(196 90 44 / 0.18);
+  color: var(--color-primary);
+}
+.btn-day[data-state='edge'] {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.btn-segment {                      /* Yes/No, One way/Return */
+  background-color: transparent;
+  color: var(--color-dark);
+  box-shadow: 0 0 0 transparent;
+}
+.btn-segment[aria-pressed='true'] {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+.btn-card {                         /* route / camp selection */
+  background-color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-card);
+}
+.btn-card[aria-pressed='true'] {
+  background-color: var(--color-primary);
 }
 @media (hover: hover) {
-  .btn-hover:hover:not(:disabled) {
+  .btn-light:hover,
+  .btn-dark:hover,
+  .btn-day:hover:not(:disabled),
+  .btn-segment:hover {
     background-color: var(--color-primary-hover);
+    color: #fff;
     box-shadow: var(--shadow-btn-hover);
   }
-  .btn-hover-shadow:hover:not(:disabled) {
+  .btn-card:hover {
     box-shadow: var(--shadow-btn-hover);
   }
+  .btn-card:not([aria-pressed='true']):hover {
+    border-color: var(--color-primary);
+  }
+}
+
+/* ─── Every other button — shared timing; hover look stays per component ─── */
+.btn-smooth {
+  transition-property: background-color, border-color, color, box-shadow, transform;
+  transition-duration: var(--duration-btn);
+  transition-timing-function: var(--ease-btn);
 }
 
 /* ─── WhatsApp button — single source for every WhatsApp CTA ───

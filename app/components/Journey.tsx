@@ -506,7 +506,7 @@ function ImageCarousel({images}: {images: {src: string; alt: string}[]}) {
           type="button"
           aria-label={t('aria.journey.prev_photo', 'Previous photo')}
           onClick={() => advance(-1)}
-          className="pointer-events-auto flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white text-dark shadow-[0_0.25rem_0.75rem_rgba(0,0,0,0.22)] transition-transform hover:scale-105"
+          className="pointer-events-auto flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white text-dark shadow-[0_0.25rem_0.75rem_rgba(0,0,0,0.22)] btn-smooth hover:scale-105"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="m15 18-6-6 6-6" />
@@ -516,7 +516,7 @@ function ImageCarousel({images}: {images: {src: string; alt: string}[]}) {
           type="button"
           aria-label={t('aria.journey.next_photo', 'Next photo')}
           onClick={() => advance(1)}
-          className="pointer-events-auto flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white text-dark shadow-[0_0.25rem_0.75rem_rgba(0,0,0,0.22)] transition-transform hover:scale-105"
+          className="pointer-events-auto flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white text-dark shadow-[0_0.25rem_0.75rem_rgba(0,0,0,0.22)] btn-smooth hover:scale-105"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="m9 18 6-6-6-6" />

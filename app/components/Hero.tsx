@@ -58,7 +58,7 @@ export function Hero({
           </a>
           <a
             href="#journey"
-            className="font-display text-btn bg-white/10 text-sand px-8 py-3.5 rounded-full border border-sand/30 hover:bg-white/15 transition-colors"
+            className="font-display text-btn bg-white/10 text-sand px-8 py-3.5 rounded-full border border-sand/30 hover:bg-white/15 btn-smooth"
           >
             {t('hero.cta_secondary', 'Watch the Journey ↓')}
           </a>

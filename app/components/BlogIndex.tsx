@@ -99,7 +99,7 @@ export function BlogIndex({
                     setActive(c);
                     setShown(pageSize);
                   }}
-                  className={`h-12 rounded-full px-8 font-display text-[18px] font-bold shadow-card-m transition-colors ${
+                  className={`h-12 rounded-full px-8 font-display text-[18px] font-bold shadow-card-m btn-smooth ${
                     on ? 'bg-primary text-white' : 'bg-white text-dark hover:text-primary'
                   }`}
                 >
@@ -146,7 +146,7 @@ export function BlogIndex({
             <button
               type="button"
               onClick={() => setShown((s) => s + pageSize)}
-              className="h-13 rounded-full bg-white px-9 font-display text-[18px] font-bold text-primary shadow-card-m transition-colors hover:bg-primary hover:text-white"
+              className="h-13 rounded-full bg-white px-9 font-display text-[18px] font-bold text-primary shadow-card-m btn-smooth hover:bg-primary hover:text-white"
             >
               {t('blog.load_more', 'Load more')} <span aria-hidden="true">&darr;</span>
             </button>

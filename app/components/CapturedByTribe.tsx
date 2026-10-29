@@ -390,7 +390,7 @@ function VideoModal({item, onClose}: {item: TribeVideo; onClose: () => void}) {
           type="button"
           aria-label={t('aria.gallery.close_video', 'Close video')}
           onClick={onClose}
-          className="absolute right-3.5 top-3.5 flex h-10 w-10 items-center justify-center rounded-full bg-sand/15 text-xl text-sand transition-colors hover:bg-sand/25"
+          className="absolute right-3.5 top-3.5 flex h-10 w-10 items-center justify-center rounded-full bg-sand/15 text-xl text-sand btn-smooth hover:bg-sand/25"
         >
           ×
         </button>
@@ -414,7 +414,7 @@ function NavButton({
       aria-label={label}
       onClick={onClick}
       className="tribe-nav-btn flex h-9 w-9 items-center justify-center rounded-full bg-dark text-white
-                 transition-all duration-200
+                 btn-smooth
                  hover:scale-110 hover:bg-primary hover:shadow-[0_0.25rem_1.25rem_rgba(196,90,44,0.5)]
                  active:scale-90"
     >

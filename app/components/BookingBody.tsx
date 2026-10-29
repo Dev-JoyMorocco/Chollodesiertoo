@@ -576,11 +576,7 @@ export function BookingBody({
                       type="button"
                       onClick={() => setRouteId(r.id)}
                       aria-pressed={selected}
-                      className={`flex min-h-28 items-center justify-between gap-4 rounded-card border-2 p-5 text-left shadow-card btn-hover-shadow ${
-                        selected
-                          ? 'border-transparent bg-primary'
-                          : 'border-transparent bg-white hover:border-primary'
-                      }`}
+                      className="flex min-h-28 items-center justify-between gap-4 rounded-card border-2 p-5 text-left btn-card"
                     >
                       <div className="flex flex-col justify-center items-center">
                         <p
@@ -652,11 +648,7 @@ export function BookingBody({
                       type="button"
                       onClick={() => setCampId(c.id)}
                       aria-pressed={selected}
-                      className={`flex min-h-28 items-center justify-between gap-3.5 rounded-card border-2 p-5 text-left shadow-card btn-hover-shadow ${
-                        selected
-                          ? 'border-transparent bg-primary'
-                          : 'border-transparent bg-white hover:border-primary'
-                      }`}
+                      className="flex min-h-28 items-center justify-between gap-3.5 rounded-card border-2 p-5 text-left btn-card"
                     >
                       <div className="flex flex-col justify-center items-center">
                         <p
@@ -699,7 +691,7 @@ export function BookingBody({
                           type="button"
                           aria-label={t('booking.aria_prev_month', 'Previous month')}
                           onClick={() => setMonthOffset((o) => o - 1)}
-                          className="flex size-8 items-center justify-center rounded-full border border-dark/15 bg-dark text-white btn-hover"
+                          className="flex size-8 items-center justify-center rounded-full border border-dark/15 btn-dark"
                         >
                           &lsaquo;
                         </button>
@@ -710,7 +702,7 @@ export function BookingBody({
                           type="button"
                           aria-label={t('booking.aria_next_month', 'Next month')}
                           onClick={() => setMonthOffset((o) => o + 1)}
-                          className="flex size-8 items-center justify-center rounded-full border border-dark/15 bg-dark text-white btn-hover"
+                          className="flex size-8 items-center justify-center rounded-full border border-dark/15 btn-dark"
                         >
                           &rsaquo;
                         </button>
@@ -732,14 +724,15 @@ export function BookingBody({
                             type="button"
                             disabled={cell.blank}
                             onClick={() => cell.date && pickDate(cell.date)}
-                            className={`aspect-square rounded-full text-label font-bold btn-hover hover:text-white ${
+                            data-state={
+                              cell.isStart || cell.isEnd ? 'edge' : cell.inRange ? 'range' : undefined
+                            }
+                            className={`btn-day aspect-square rounded-full text-label ${
                               cell.blank
                                 ? 'invisible'
-                                : cell.isStart || cell.isEnd
-                                  ? 'bg-primary font-bold text-white'
-                                  : cell.inRange
-                                    ? 'bg-primary/18 font-semibold text-primary'
-                                    : 'bg-transparent text-dark/80'
+                                : cell.inRange && !cell.isStart && !cell.isEnd
+                                  ? 'font-semibold'
+                                  : 'font-bold'
                             }`}
                           >
                             {cell.day}
@@ -767,7 +760,7 @@ export function BookingBody({
                   type="button"
                   aria-label={t('booking.aria_decrease_travelers', 'Decrease travelers')}
                   onClick={() => setTravelers((t) => Math.max(0, t - 1))}
-                  className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-4xl text-primary hover:text-white shadow-card btn-hover"
+                  className="flex h-14 w-14 items-center justify-center rounded-full text-4xl btn-light"
                 >
                   &minus;
                 </button>
@@ -778,7 +771,7 @@ export function BookingBody({
                   type="button"
                   aria-label={t('booking.aria_increase_travelers', 'Increase travelers')}
                   onClick={() => setTravelers((t) => Math.min(17, t + 1))}
-                  className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-4xl text-primary hover:text-white shadow-card btn-hover"
+                  className="flex h-14 w-14 items-center justify-center rounded-full text-4xl btn-light"
                 >
                   +
                 </button>
@@ -1062,7 +1055,7 @@ export function BookingBody({
                 disabled={isReserving}
                 className="group flex w-full cursor-pointer items-center rounded-full bg-white p-1 text-btn text-forest shadow-card-m disabled:cursor-not-allowed disabled:opacity-70"
               >
-                <span className="py-3 px-6 rounded-full text-white font-display bg-amber-500 group-hover:bg-amber-600 group-disabled:bg-amber-600 transition-colors duration-200 ease-out motion-reduce:transition-none">
+                <span className="py-3 px-6 rounded-full text-white font-display bg-amber-500 group-hover:bg-amber-600 group-disabled:bg-amber-600 btn-smooth">
                   {isReserving ? (
                     t('booking.reserving', 'Reserving\u2026')
                   ) : (
@@ -1354,7 +1347,7 @@ function Stepper({
         type="button"
         aria-label={decLabel}
         onClick={onDec}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-4xl hover:text-white text-primary shadow-card btn-hover"
+        className="flex h-14 w-14 items-center justify-center rounded-full text-4xl btn-light"
       >
         &minus;
       </button>
@@ -1365,7 +1358,7 @@ function Stepper({
         type="button"
         aria-label={incLabel}
         onClick={onInc}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-4xl hover:text-white text-primary shadow-card btn-hover"
+        className="flex h-14 w-14 items-center justify-center rounded-full text-4xl btn-light"
       >
         +
       </button>
@@ -1389,9 +1382,8 @@ function SegmentedControl({
           key={opt.value}
           type="button"
           onClick={() => onChange(opt.value)}
-          className={`rounded-full py-3 text-btn font-display w-full btn-hover hover:text-white ${
-            opt.value === value ? 'bg-primary text-white' : 'text-dark'
-          }`}
+          aria-pressed={opt.value === value}
+          className="btn-segment rounded-full py-3 text-btn font-display w-full"
         >
           {opt.label}
         </button>

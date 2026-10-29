@@ -278,7 +278,7 @@ function SocialLink({
     <a
       href={href}
       aria-label={label}
-      className={`${shape} text-dark transition-colors hover:border-primary hover:text-primary`}
+      className={`${shape} text-dark btn-smooth hover:border-primary hover:text-primary`}
     >
       <SocialIcon icon={icon} />
     </a>

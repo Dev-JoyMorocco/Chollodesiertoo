@@ -183,7 +183,7 @@ export function Testimonials({
           <a
             href={secondaryCtaHref}
             className="inline-block rounded-full border border-dark/15 bg-white px-10 py-4 font-display text-btn text-dark
-                       shadow-card-m transition-[border-color,color,transform] hover:border-primary hover:text-primary"
+                       shadow-card-m btn-smooth hover:border-primary hover:text-primary"
           >
             {secondaryCtaLabel ?? t('reviews.cta_secondary', 'Read all Reviews →')}
           </a>
@@ -212,7 +212,7 @@ function NavButton({
       aria-label={label}
       onClick={onClick}
       className="flex h-10 w-10 items-center justify-center rounded-full bg-dark text-white
-                 transition-[background-color,transform] hover:scale-105 hover:bg-primary"
+                 btn-smooth hover:scale-105 hover:bg-primary"
     >
       <svg
         width="16"
