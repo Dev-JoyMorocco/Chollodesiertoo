@@ -244,7 +244,8 @@ export const SF_SITE_SETTINGS_QUERY = `#graphql
     # primaryDomain rides along here so menu URLs can be internalised without a
     # second round trip — Shopify resolves FRONTPAGE menu items to the primary
     # domain, not the myshopify one.
-    shop { primaryDomain { host } }
+    # name is the site name — the logo's alt text when brand_name is blank.
+    shop { name primaryDomain { host } }
     metaobjects(type: "site_settings", first: 1) {
       nodes {
         id
@@ -733,6 +734,11 @@ export function mapBookingTransfer(data: unknown) {
     image: image.url,
     imageAlt: image.alt,
   };
+}
+
+/** Reads the store name (Admin > Settings > General) out of a SF_SITE_SETTINGS_QUERY result. */
+export function shopName(data: unknown): string {
+  return ((data as any)?.shop?.name as string) ?? '';
 }
 
 /** Reads the shop's primary domain host out of a SF_SITE_SETTINGS_QUERY result. */

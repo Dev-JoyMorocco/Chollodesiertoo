@@ -55,7 +55,7 @@ const ASSETS = [
     name: 'Favicon',
     description:
       'The small icon in the browser tab. A square SVG or PNG. Leave empty to use the one built into the theme.',
-    file: 'app/assets/favicon.svg',
+    file: 'app/assets/favicon.png',
     alt: 'Site favicon',
   },
 ];

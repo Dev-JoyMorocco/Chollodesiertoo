@@ -64,7 +64,8 @@ export function SiteFooter({
 }: SiteFooterProps) {
   // site_settings comes from the root loader (rendered on every page).
   const root = useRouteLoaderData<RootLoader>('root');
-  const brandName = root?.siteSettings?.brandName || 'Budget Desert Tour';
+  // The logo's alt text: the site name, from brand_name or else the store name.
+  const brandName = root?.siteSettings?.brandName || root?.shopName || 'Chollodesierto';
   // Uploaded in Admin > Content > Metaobjects > Site Settings. The bundled
   // SVG is only a fallback, so a store that has not set one still renders.
   const logoUrl = root?.siteSettings?.logoUrl || logoFallback;
@@ -234,7 +235,7 @@ export function SiteFooter({
         <div className="mb-7 md:mb-8 inline-flex flex-col items-center gap-3 text-center sm:flex-row sm:gap-[18px] sm:text-left">
           <img src={logoUrl} alt={brandName} className="h-10 w-auto shrink-0" />
           <span aria-hidden="true" className="hidden w-px self-stretch bg-[#e5d6c2]/25 sm:block" />
-          <span className="text-sand text-[0.76rem] whitespace-pre-line">
+          <span className="text-sand text-[0.76rem] text-shadow-slogan whitespace-pre-line">
             {tagline}
           </span>
         </div>

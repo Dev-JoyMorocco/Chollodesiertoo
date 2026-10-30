@@ -11,7 +11,7 @@ import {
   ScrollRestoration,
   useRouteLoaderData,
 } from 'react-router';
-import faviconFallback from '~/assets/favicon.svg';
+import faviconFallback from '~/assets/favicon.png';
 import tailwindCss from '~/styles/tailwind.css?url';
 import {
   SF_SITE_SETTINGS_QUERY,
@@ -19,6 +19,7 @@ import {
   mapSiteSettings,
   mapMenu,
   primaryDomainHost,
+  shopName,
 } from '~/lib/admin-queries';
 import {UI_STRINGS_QUERY, mapUiStrings} from '~/lib/ui-strings';
 
@@ -68,6 +69,8 @@ export async function loader({context}: LoaderFunctionArgs) {
 
   return {
     siteSettings: mapSiteSettings(settingsRes),
+    /** Store name from Shopify — the site name wherever brand_name is blank. */
+    shopName: shopName(settingsRes),
     uiStrings: mapUiStrings(uiStringsRes),
     mainMenu: mapMenu(menuRes, internalHosts),
     footerMenu: mapMenu(footerMenuRes, internalHosts),

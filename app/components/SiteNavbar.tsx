@@ -20,7 +20,8 @@ export function SiteNavbar() {
   const [open, setOpen] = useState(false);
   // site_settings comes from the root loader (rendered on every page).
   const root = useRouteLoaderData<RootLoader>('root');
-  const brandName = root?.siteSettings?.brandName || 'Budget Desert Tour';
+  // The logo's alt text: the site name, from brand_name or else the store name.
+  const brandName = root?.siteSettings?.brandName || root?.shopName || 'Chollodesierto';
   // Uploaded in Admin > Content > Metaobjects > Site Settings. The bundled
   // SVG is only a fallback, so a store that has not set one still renders.
   const logoUrl = root?.siteSettings?.logoUrl || logoFallback;
@@ -45,7 +46,7 @@ export function SiteNavbar() {
                 to screen readers and still sourced from Shopify. */}
             <img src={logoUrl} alt={brandName} className="h-9 w-auto shrink-0 md:h-10" />
             <div className="hidden md:block w-px h-11 bg-sand/25" />
-            <p className="hidden md:block font-body text-author text-sand/60 whitespace-pre-line">
+            <p className="hidden md:block font-body text-author text-sand/60 text-shadow-slogan whitespace-pre-line">
               {tagline}
             </p>
           </Link>
