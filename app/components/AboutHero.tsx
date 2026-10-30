@@ -46,7 +46,7 @@ export function AboutHero({
       {/* Soft warm scrim behind the copy so white text stays legible on bright sand */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-linear-to-b from-0% via-30% to-sand"
+        className="absolute inset-0 bg-linear-to-b from-90% to-sand"
       />
 
       <div className="relative z-10 mx-auto max-w-160 px-6 text-center">
