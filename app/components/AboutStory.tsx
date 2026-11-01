@@ -75,7 +75,7 @@ export function AboutStory({
               {title}
             </h2>
 
-            <div className="flex flex-col gap-[1.15rem] text-label text-dark text-left">
+            <div className="flex flex-col gap-[1.15rem] text-label text-dark text-justify">
               {paragraphs.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
