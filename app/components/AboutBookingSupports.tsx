@@ -56,7 +56,7 @@ export function AboutBookingSupports({
       <div className="container mx-auto max-w-content px-8">
         <div className="grid grid-cols-1 items-stretch gap-16 md:grid-cols-2">
           {/* Tall portrait image — tracks the copy column height on desktop */}
-          <figure className="aspect-[5/7] overflow-hidden rounded-card shadow-card-hover md:aspect-auto md:min-h-[34rem] md:-mt-60 shadow-card-m">
+          <figure className="aspect-5/7 overflow-hidden rounded-card shadow-card-hover md:aspect-auto md:min-h-136 md:-mt-60 shadow-card-m">
             <img src={image.src} alt={image.alt} className="h-full w-full object-cover" loading="lazy" />
           </figure>
 
