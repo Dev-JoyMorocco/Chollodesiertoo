@@ -84,22 +84,6 @@ export const SF_COMPARISON_QUERY = `
   }
 `;
 
-export const SF_PARTNERS_QUERY = `
-  query AdminPartners {
-    metaobjects(type: "partner", first: 20) {
-      nodes {
-        id
-        handle
-        fields {
-          key
-          value
-          reference { ... on MediaImage { image { url altText } } }
-        }
-      }
-    }
-  }
-`;
-
 export const SF_GALLERY_QUERY = `
   query AdminGallery {
     metaobjects(type: "gallery_item", first: 20) {
@@ -493,24 +477,6 @@ export function mapComparisonRows(data: unknown) {
       return {
         usual: f(fields, 'usual'),
         ours: f(fields, 'ours'),
-        _sort: fInt(fields, 'sort_order'),
-      };
-    }),
-  );
-}
-
-// ── partner — Partners {name, description, badge, logo?} ─────────────────────
-
-export function mapPartners(data: unknown) {
-  return bySort(
-    nodesOf(data).map((node) => {
-      const fields: MetaField[] = node.fields;
-      const logo = fImg(fields, 'logo');
-      return {
-        name: f(fields, 'name'),
-        description: f(fields, 'description'),
-        badge: f(fields, 'badge'),
-        logo: logo?.url ?? undefined,
         _sort: fInt(fields, 'sort_order'),
       };
     }),
