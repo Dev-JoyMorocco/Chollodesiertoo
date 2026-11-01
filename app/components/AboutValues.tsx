@@ -65,7 +65,7 @@ export function AboutValues({
         {/* Heading */}
         <div className="mb-13 text-center">
           <div className="mb-4 inline-flex flex-col items-center gap-1.5">
-            <span className="text-label font-bold uppercase tracking-[0.22em] text-primary">
+            <span className="text-label font-bold uppercase text-primary">
               {eyebrow || t('about.values_eyebrow', 'Our Values')}
             </span>
             <Underline />
