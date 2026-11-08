@@ -71,7 +71,20 @@ export const SF_CHECKLIST_QUERY = `
 export const SF_VALUE_PROPS_QUERY = `
   query AdminValueProps {
     metaobjects(type: "value_prop", first: 50) {
-      nodes { id handle fields { key value } }
+      nodes {
+        id
+        handle
+        fields {
+          key
+          value
+          # icon_image: an uploaded icon that replaces the built-in one. SVGs
+          # come back as GenericFile, PNGs as MediaImage.
+          reference {
+            ... on MediaImage { image { url altText } }
+            ... on GenericFile { url }
+          }
+        }
+      }
     }
   }
 `;
@@ -458,6 +471,7 @@ export function mapValueProps(data: unknown, group: 'trust' | 'about_values') {
         const fields: MetaField[] = node.fields;
         return {
           icon: f(fields, 'icon'),
+          iconUrl: fFileUrl(fields, 'icon_image'),
           title: f(fields, 'title'),
           body: f(fields, 'body'),
           group: f(fields, 'group'),
