@@ -45,7 +45,7 @@ export function Hero({
         src={camelsSvg}
         alt=""
         aria-hidden="true"
-        className="absolute bottom-8 left-1/2 z-12 h-auto w-[clamp(120px,11vw,180px)] -translate-x-1/2 pointer-events-none"
+        className="absolute bottom-10 lg:bottom-8 left-1/2 z-12 h-auto w-[clamp(120px,11vw,180px)] -translate-x-1/2 pointer-events-none"
       />
 
       {/* Content — above all layers */}
