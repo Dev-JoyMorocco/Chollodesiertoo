@@ -88,7 +88,7 @@ function StoryCard({story}: {story: Story}) {
   return (
     <Link
       to={story.href}
-      className="group flex h-105 flex-col overflow-hidden rounded-2xl bg-white shadow-card-m transition-transform duration-200 hover:-translate-y-1 md:col-span-4"
+      className="group flex h-105 flex-col overflow-hidden rounded-2xl bg-white shadow-card-m duration-200 md:col-span-4"
     >
       <div className="relative h-72.5 flex-none">
         {/* Scrim so the category label stays readable over a bright photo. */}
