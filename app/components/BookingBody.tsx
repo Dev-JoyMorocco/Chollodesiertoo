@@ -1,6 +1,7 @@
 import {useMemo, useState} from 'react';
 import {useT} from '~/lib/ui-strings';
 import {moroccoTomorrow, toIsoDate} from '~/lib/booking-date';
+import {transferTierFor, type TransferConfig} from '~/lib/booking-transfer';
 import {useFetcher} from 'react-router';
 
 // ── Types (exported — loader maps Shopify metaobjects to these shapes) ──────
@@ -36,14 +37,7 @@ export interface ExtraOption {
   defaultQty?: number;
 }
 
-export interface TransferConfig {
-  onewayPrice: number;
-  returnPrice: number;
-  onewayVariantId: string;
-  returnVariantId: string;
-  image: string;
-  imageAlt: string;
-}
+export type {TransferConfig} from '~/lib/booking-transfer';
 
 // ── Defaults (static fallback until Shopify metaobjects are wired) ──────────
 
@@ -131,11 +125,21 @@ export const DEFAULT_EXTRAS: ExtraOption[] = [
   },
 ];
 
+// Only used if the transfer product can't be read. Prices are a total for the
+// group; the live prices and variants come from the product in Shopify.
+const LEGACY_ONEWAY_VARIANT = 'gid://shopify/ProductVariant/43295619383394';
+const LEGACY_RETURN_VARIANT = 'gid://shopify/ProductVariant/43295619416162';
+
 export const DEFAULT_TRANSFER: TransferConfig = {
-  onewayPrice: 25,
-  returnPrice: 45,
-  onewayVariantId: 'gid://shopify/ProductVariant/43295619383394',
-  returnVariantId: 'gid://shopify/ProductVariant/43295619416162',
+  tiers: [
+    {min: 1, max: 4, onewayPrice: 14, returnPrice: 28},
+    {min: 5, max: 7, onewayPrice: 19, returnPrice: 38},
+    {min: 8, max: 17, onewayPrice: 35, returnPrice: 70},
+  ].map((tier) => ({
+    ...tier,
+    onewayVariantId: LEGACY_ONEWAY_VARIANT,
+    returnVariantId: LEGACY_RETURN_VARIANT,
+  })),
   image:
     'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=300&q=80',
   imageAlt: 'Private airport transfer vehicle',
@@ -437,9 +441,19 @@ export function BookingBody({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthOffset, departDate, returnDate, monthNames, firstBookableKey]);
 
+  // The transfer is priced per group: the row for this many travelers. Past the
+  // last row (a misconfigured product) the largest group's price applies; the
+  // server refuses that booking rather than charging the wrong amount.
+  const transferTier =
+    transferTierFor(transfer.tiers, travelers) ?? transfer.tiers[transfer.tiers.length - 1];
   const transferPrice =
-    transferType === 'oneway' ? transfer.onewayPrice : transfer.returnPrice;
+    transferType === 'oneway' ? transferTier.onewayPrice : transferTier.returnPrice;
   const transferTypeLabel = transferType === 'oneway' ? 'One way' : 'Return';
+  // "1 Traveler" / "2 Travelers" on the transfer cards.
+  const transferTravelersWord =
+    travelers === 1
+      ? t('booking.traveler_word', 'Traveler')
+      : t('booking.travelers_word', 'Travelers');
 
   const total =
     selectedRoute.price * travelers +
@@ -555,8 +569,8 @@ export function BookingBody({
     if (transferEnabled) {
       const transferVariantId =
         transferType === 'oneway'
-          ? transfer.onewayVariantId
-          : transfer.returnVariantId;
+          ? transferTier.onewayVariantId
+          : transferTier.returnVariantId;
       lines.push({merchandiseId: transferVariantId, quantity: 1, attributes});
     }
 
@@ -874,10 +888,7 @@ export function BookingBody({
                       <div className="shrink-0 self-stretch border-l border-dashed border-primary" />
                       <div className="flex shrink-0 flex-col justify-center gap-px px-4 font-bold text-left">
                         <span className="text-xs text-dark">
-                          {travelers} {t('booking.travelers_word', 'Travelers')}
-                        </span>
-                        <span className="text-xs text-dark">
-                          {t('booking.vehicle_one', '1 Vehicle')}
+                          {travelers} {transferTravelersWord}
                         </span>
                         <span className="text-xs text-dark">
                           {transferTypeLabel}
@@ -1022,10 +1033,7 @@ export function BookingBody({
                       <div className="shrink-0 self-stretch border-l border-dashed border-primary" />
                       <div className="flex shrink-0 flex-col justify-center gap-px px-4 font-bold text-left">
                         <span className="text-xs text-dark">
-                          {travelers} {t('booking.travelers_word', 'Travelers')}
-                        </span>
-                        <span className="text-xs text-dark">
-                          {t('booking.vehicle_one', '1 Vehicle')}
+                          {travelers} {transferTravelersWord}
                         </span>
                         <span className="text-xs text-dark">
                           {transferTypeLabel}

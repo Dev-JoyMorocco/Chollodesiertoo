@@ -263,8 +263,8 @@ const STRINGS = {
   'booking.transfer_oneway': ['One way', 'Transfer — One way', BOOKING, 'Booking form toggle'],
   'booking.transfer_return': ['Return', 'Transfer — Return', BOOKING, 'Booking form toggle'],
   'booking.total_transfer':  ['Total transfer', 'Transfer — Price label', BOOKING, 'Transfer card'],
-  'booking.travelers_word':  ['Travelers', 'Transfer — "Travelers"', BOOKING, 'Transfer card, after the number'],
-  'booking.vehicle_one':     ['1 Vehicle', 'Transfer — Vehicle count', BOOKING, 'Transfer card'],
+  'booking.traveler_word':   ['Traveler', 'Transfer — "Traveler" (one)', BOOKING, 'Transfer card, after the number 1'],
+  'booking.travelers_word':  ['Travelers', 'Transfer — "Travelers"', BOOKING, 'Transfer card, after a number above 1'],
 
   // ── Booking page — summary ──
   'booking.summary_title':   ['Your Trip Summary', 'Summary — Title', BOOKING, 'Booking page sidebar'],
