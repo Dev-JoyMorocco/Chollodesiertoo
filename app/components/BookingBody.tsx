@@ -1,5 +1,6 @@
 import {useMemo, useState} from 'react';
 import {useT} from '~/lib/ui-strings';
+import {moroccoTomorrow, toIsoDate} from '~/lib/booking-date';
 import {useFetcher} from 'react-router';
 
 // ── Types (exported — loader maps Shopify metaobjects to these shapes) ──────
@@ -259,6 +260,8 @@ interface DayCell {
   isStart: boolean;
   isEnd: boolean;
   inRange: boolean;
+  /** Today or earlier in Morocco — shown but not selectable. */
+  past: boolean;
 }
 
 function sameDay(a: Date | null, b: Date | null) {
@@ -271,54 +274,22 @@ function sameDay(a: Date | null, b: Date | null) {
   );
 }
 
-/**
- * `YYYY-MM-DD` from the date's own calendar day.
- *
- * Not `toISOString()`: that converts to UTC first, so a date picked in the
- * evening west of Greenwich — or any evening in a positive-offset zone — can
- * come out as the day before. The booking backend takes this literally.
- */
-function toIsoDate(d: Date): string {
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${d.getFullYear()}-${month}-${day}`;
-}
-
 function addDays(d: Date, n: number) {
   const copy = new Date(d);
   copy.setDate(copy.getDate() + n);
   return copy;
 }
 
-/** "Today" for bookings is Morocco's today, whatever the server or visitor clock says. */
-const BOOKING_TIME_ZONE = 'Africa/Casablanca';
-
 /** Travelers counter bounds — a booking always has at least one person. */
 const MIN_TRAVELERS = 1;
 const MAX_TRAVELERS = 17;
-
-/**
- * Tomorrow's calendar day in Morocco, as a local-midnight Date — the shape
- * buildMonthCells and toIsoDate work with. The Date constructor rolls the
- * day over month and year ends (31 Oct → 1 Nov, 31 Dec → 1 Jan).
- */
-function moroccoTomorrow(now = new Date()): Date {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: BOOKING_TIME_ZONE,
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  }).formatToParts(now);
-  const part = (type: 'year' | 'month' | 'day') =>
-    Number(parts.find((p) => p.type === type)?.value);
-  return new Date(part('year'), part('month') - 1, part('day') + 1);
-}
 
 function buildMonthCells(
   year: number,
   monthIndex: number,
   departDate: Date,
   returnDate: Date,
+  firstBookable: Date,
 ): DayCell[] {
   const first = new Date(year, monthIndex, 1);
   const startWeekday = (first.getDay() + 6) % 7;
@@ -332,6 +303,7 @@ function buildMonthCells(
       isStart: false,
       isEnd: false,
       inRange: false,
+      past: false,
     });
   }
   for (let d = 1; d <= daysInMonth; d++) {
@@ -343,6 +315,7 @@ function buildMonthCells(
       isStart: sameDay(date, departDate),
       isEnd: sameDay(date, returnDate),
       inRange: date > departDate && date < returnDate,
+      past: date < firstBookable,
     });
   }
   return cells;
@@ -441,6 +414,15 @@ export function BookingBody({
   const selectedRoute = routes.find((r) => r.id === routeId) ?? routes[0];
   const selectedCamp = camps.find((c) => c.id === campId) ?? camps[0];
 
+  // The first day that can be booked: tomorrow in Morocco. Recomputed each
+  // render so a page left open past midnight closes the day that just began.
+  const firstBookable = moroccoTomorrow();
+  const firstBookableKey = toIsoDate(firstBookable);
+  // The left pane may not go back past the first bookable day's month.
+  const leftPaneMonth = monthBaseYear * 12 + monthBaseIndex + monthOffset;
+  const canGoBack =
+    leftPaneMonth > firstBookable.getFullYear() * 12 + firstBookable.getMonth();
+
   const months = useMemo(() => {
     return [0, 1].map((offsetFromBase) => {
       const total = monthBaseIndex + monthOffset + offsetFromBase;
@@ -448,10 +430,12 @@ export function BookingBody({
       const monthIndex = ((total % 12) + 12) % 12;
       return {
         label: `${monthNames[monthIndex]} ${year}`,
-        cells: buildMonthCells(year, monthIndex, departDate, returnDate),
+        cells: buildMonthCells(year, monthIndex, departDate, returnDate, firstBookable),
       };
     });
-  }, [monthOffset, departDate, returnDate, monthNames]);
+    // firstBookableKey stands in for firstBookable, a new Date every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [monthOffset, departDate, returnDate, monthNames, firstBookableKey]);
 
   const transferPrice =
     transferType === 'oneway' ? transfer.onewayPrice : transfer.returnPrice;
@@ -510,6 +494,13 @@ export function BookingBody({
     if (!tourVariantId) {
       setValidationError(
         'This route and camp combination is not bookable right now. Please try a different one or WhatsApp us.',
+      );
+      return;
+    }
+
+    if (departDate < moroccoTomorrow()) {
+      setValidationError(
+        t('booking.date_past', 'That date has passed. Please pick a date from tomorrow onwards.'),
       );
       return;
     }
@@ -717,7 +708,8 @@ export function BookingBody({
                         <button
                           type="button"
                           aria-label={t('booking.aria_prev_month', 'Previous month')}
-                          onClick={() => setMonthOffset((o) => o - 1)}
+                          onClick={() => canGoBack && setMonthOffset((o) => o - 1)}
+                          disabled={!canGoBack}
                           className="flex size-8 items-center justify-center rounded-full border border-dark/15 btn-dark"
                         >
                           &lsaquo;
@@ -749,7 +741,7 @@ export function BookingBody({
                           <button
                             key={ci}
                             type="button"
-                            disabled={cell.blank}
+                            disabled={cell.blank || cell.past}
                             onClick={() => cell.date && pickDate(cell.date)}
                             data-state={
                               cell.isStart || cell.isEnd ? 'edge' : cell.inRange ? 'range' : undefined

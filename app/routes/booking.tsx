@@ -1,4 +1,5 @@
 import {metaT} from '~/lib/ui-strings';
+import {isBookableIsoDate} from '~/lib/booking-date';
 import {data, redirect, useLoaderData} from 'react-router';
 import type {
   ActionFunctionArgs,
@@ -194,6 +195,19 @@ export async function action({request, context}: ActionFunctionArgs) {
   if (!parsed.every(isCartLine)) {
     return data(
       {error: 'Something looked off with your booking. Please try again.'},
+      {status: 400},
+    );
+  }
+
+  // The calendar only offers tomorrow onwards (Morocco time), but the form can
+  // be replayed by hand, so every line's departure date is checked again here.
+  const datesOk = parsed.every((line) => {
+    const date = line.attributes?.find((a) => a.key === '_arrival_date')?.value;
+    return typeof date === 'string' && isBookableIsoDate(date);
+  });
+  if (!datesOk) {
+    return data(
+      {error: 'That date has passed. Please pick a date from tomorrow onwards.'},
       {status: 400},
     );
   }

@@ -188,6 +188,12 @@ a { text-decoration: none; }
   background-color: var(--color-primary);
   color: #fff;
 }
+.btn-day:disabled {                 /* today and past days */
+  color: rgb(26 31 46 / 0.25);
+}
+.btn-dark:disabled {                /* month arrow at the first bookable month */
+  opacity: 0.3;
+}
 .btn-segment {                      /* Yes/No, One way/Return */
   background-color: transparent;
   color: var(--color-dark);
@@ -207,7 +213,7 @@ a { text-decoration: none; }
 }
 @media (hover: hover) {
   .btn-light:hover:not(:disabled),
-  .btn-dark:hover,
+  .btn-dark:hover:not(:disabled),
   .btn-day:hover:not(:disabled),
   .btn-segment:hover {
     background-color: var(--color-primary-hover);
