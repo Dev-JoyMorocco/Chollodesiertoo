@@ -293,6 +293,10 @@ function addDays(d: Date, n: number) {
 /** "Today" for bookings is Morocco's today, whatever the server or visitor clock says. */
 const BOOKING_TIME_ZONE = 'Africa/Casablanca';
 
+/** Travelers counter bounds — a booking always has at least one person. */
+const MIN_TRAVELERS = 1;
+const MAX_TRAVELERS = 17;
+
 /**
  * Tomorrow's calendar day in Morocco, as a local-midnight Date — the shape
  * buildMonthCells and toIsoDate work with. The Date constructor rolls the
@@ -420,7 +424,7 @@ export function BookingBody({
     month: departDate.getMonth(),
   }));
   // Defaults to a single traveler; the shopper adjusts from there.
-  const [travelers, setTravelers] = useState(1);
+  const [travelers, setTravelers] = useState(MIN_TRAVELERS);
   const [extraQtys, setExtraQtys] = useState<Record<string, number>>(() =>
     Object.fromEntries(extras.map((e) => [e.id, e.defaultQty ?? 0])),
   );
@@ -782,7 +786,8 @@ export function BookingBody({
                 <button
                   type="button"
                   aria-label={t('booking.aria_decrease_travelers', 'Decrease travelers')}
-                  onClick={() => setTravelers((t) => Math.max(0, t - 1))}
+                  onClick={() => setTravelers((t) => Math.max(MIN_TRAVELERS, t - 1))}
+                  disabled={travelers <= MIN_TRAVELERS}
                   className="flex h-14 w-14 items-center justify-center rounded-full text-4xl btn-light"
                 >
                   &minus;
@@ -793,7 +798,8 @@ export function BookingBody({
                 <button
                   type="button"
                   aria-label={t('booking.aria_increase_travelers', 'Increase travelers')}
-                  onClick={() => setTravelers((t) => Math.min(17, t + 1))}
+                  onClick={() => setTravelers((t) => Math.min(MAX_TRAVELERS, t + 1))}
+                  disabled={travelers >= MAX_TRAVELERS}
                   className="flex h-14 w-14 items-center justify-center rounded-full text-4xl btn-light"
                 >
                   +
@@ -1076,7 +1082,7 @@ export function BookingBody({
                 type="button"
                 onClick={handleReserve}
                 disabled={isReserving}
-                className="group flex w-full cursor-pointer items-center rounded-full bg-white p-1 text-btn text-forest shadow-card-m disabled:cursor-not-allowed disabled:opacity-70"
+                className="group flex w-full items-center rounded-full bg-white p-1 text-btn text-forest shadow-card-m disabled:opacity-70"
               >
                 <span className="py-3 px-6 rounded-full text-white font-display bg-amber-500 group-hover:bg-amber-600 group-disabled:bg-amber-600 btn-smooth">
                   {isReserving ? (
@@ -1189,7 +1195,7 @@ export function BookingBody({
                         type="button"
                         onClick={() => setOpenFaq(open ? -1 : i)}
                         aria-expanded={open}
-                        className="relative w-full cursor-pointer rounded-full bg-white py-5 pl-6 pr-14 text-left shadow-card-m"
+                        className="relative w-full rounded-full bg-white py-5 pl-6 pr-14 text-left shadow-card-m"
                       >
                         <span className="text-h3 font-bold text-dark">
                           {faq.question}
