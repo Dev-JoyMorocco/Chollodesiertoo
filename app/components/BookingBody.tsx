@@ -1017,7 +1017,7 @@ export function BookingBody({
                       {t('booking.summary_transfer', 'Airport transfer')}
                     </p>
                     <p className="text-price font-display text-forest">
-                      1 x €{transferPrice}
+                      €{transferPrice}
                     </p>
                   </div>
                   <div className="flex h-22 items-stretch overflow-hidden rounded-card bg-white border border-sand mb-6">

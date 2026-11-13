@@ -103,7 +103,7 @@ export function BlogIndex({
                     setActive(c);
                     setShown(pageSize);
                   }}
-                  className={`h-12 rounded-full px-8 font-display text-[18px] font-bold shadow-card-m btn-smooth ${
+                  className={`h-12 rounded-full px-8 font-display text-btn shadow-card-m btn-smooth ${
                     on ? 'bg-primary text-white' : 'bg-white text-dark hover:text-primary'
                   }`}
                 >
@@ -150,7 +150,7 @@ export function BlogIndex({
             <button
               type="button"
               onClick={() => setShown((s) => s + pageSize)}
-              className="h-13 rounded-full px-9 font-display text-[18px] font-bold btn-light"
+              className="h-13 rounded-full px-9 font-display text-btn btn-light"
             >
               {t('blog.load_more', 'Load more')} <span aria-hidden="true">&darr;</span>
             </button>
@@ -185,7 +185,7 @@ function FeaturedCard({post}: {post: BlogPost}) {
           <p className="mb-3 max-w-67.5 text-base leading-[22px] text-dark/80">{post.excerpt}</p>
         )}
         <Meta post={post} className="mb-12" />
-        <span className="font-display text-base font-bold text-primary">
+        <span className="font-display text-base text-primary">
           {t('blog.read_story', 'Read the story')} <span aria-hidden="true">&rarr;</span>
         </span>
       </div>
@@ -261,7 +261,7 @@ function CategoryTag({
   className?: string;
 }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 font-display text-xs font-bold ${className}`}>
+    <span className={`inline-flex items-center gap-1.5 font-display text-xs ${className}`}>
       {icon === 'tag' ? (
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path

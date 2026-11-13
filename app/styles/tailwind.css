@@ -497,22 +497,23 @@ a { text-decoration: none; }
    rhythm without pulling in a typography plugin. */
 .article-body > * + * { margin-top: 0.75rem; }
 .article-body h2 {
-  font-family: var(--font-display, inherit);
-  font-size: 2.375rem;
-  line-height: 2.875rem;
-  font-weight: 700;
+  /* Patua One ships in one weight, like every other heading on the site. */
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  line-height: 1.2;
+  font-weight: 400;
   margin-top: 0;
   margin-bottom: 1.375rem;
-  color: #1A1F2E;
+  color: var(--color-dark);
 }
 .article-body * + h2 { margin-top: 2.5rem; }
 .article-body h3 {
-  font-size: 1.25rem;
+  font-size: var(--text-h3);
   line-height: 1.625rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-top: 2.125rem;
   margin-bottom: 0.625rem;
-  color: #1A1F2E;
+  color: var(--color-dark);
 }
 /* Justified with hyphenation, matching the post design. Left-aligned on narrow
    screens, where justification opens ugly rivers between words. */
@@ -520,19 +521,27 @@ a { text-decoration: none; }
 @media (max-width: 40rem) {
   .article-body p { text-align: left; hyphens: manual; }
 }
-.article-body a { color: #C45A2C; text-decoration: none; text-underline-offset: 2px; }
-.article-body a:hover { text-decoration: underline; }
-.article-body strong { color: #1A1F2E; font-weight: 600; }
+.article-body a {
+  color: var(--color-primary);
+  text-decoration: none;
+  text-underline-offset: 2px;
+  transition: color var(--duration-btn) var(--ease-btn);
+}
+.article-body a:hover { color: var(--color-primary-hover); text-decoration: underline; }
+.article-body strong { color: var(--color-dark); font-weight: 700; }
 .article-body ul,
 .article-body ol { padding-left: 1.3em; }
 .article-body ul { list-style: disc; }
 .article-body ol { list-style: decimal; }
 .article-body li + li { margin-top: .4em; }
+.article-body li::marker { color: var(--color-primary); }
 .article-body img { border-radius: 1rem; }
+/* Pull quote, styled like the founder quote on About: bold, not italic —
+   Nunito is only loaded upright. */
 .article-body blockquote {
-  border-left: 3px solid #C45A2C;
+  border-left: 3px solid var(--color-primary);
   padding-left: 1.1em;
-  font-style: italic;
-  color: #1A1F2E;
+  font-weight: 700;
+  color: var(--color-dark);
 }
-.article-body hr { border: 0; border-top: 1px solid rgba(26,31,46,.12); margin: 2.2em 0; }
+.article-body hr { border: 0; border-top: 1px solid rgb(26 31 46 / 0.12); margin: 2.2em 0; }
