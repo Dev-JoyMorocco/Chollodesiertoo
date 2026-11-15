@@ -342,6 +342,8 @@ export interface BookingBodyProps {
   whatsappHref?: string;
   /** Route handle from ?route= on /booking, used to preselect the route. */
   initialRouteId?: string;
+  /** Tour variant per `${routeId}-${campId}`, read from the store's product. */
+  tourVariantIds?: Record<string, string>;
 }
 
 export function BookingBody({
@@ -354,6 +356,7 @@ export function BookingBody({
   whatsappHref = '#whatsapp',
   initialRouteId,
   tourType = 'Shared',
+  tourVariantIds,
 }: BookingBodyProps) {
   const t = useT();
   // Day and month names, translated once per render.
@@ -504,7 +507,11 @@ export function BookingBody({
   };
 
   const handleReserve = () => {
-    const tourVariantId = DEFAULT_TOUR_VARIANT_IDS[`${routeId}-${campId}`];
+    // The store's own variant; the hardcoded ids only cover a product that
+    // could not be read.
+    const tourVariantId =
+      tourVariantIds?.[`${routeId}-${campId}`] ??
+      DEFAULT_TOUR_VARIANT_IDS[`${routeId}-${campId}`];
     if (!tourVariantId) {
       setValidationError(
         'This route and camp combination is not bookable right now. Please try a different one or WhatsApp us.',

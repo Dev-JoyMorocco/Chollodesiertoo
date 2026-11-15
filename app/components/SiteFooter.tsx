@@ -18,8 +18,6 @@ interface SocialLink {
   icon: 'instagram' | 'tiktok';
 }
 
-const CHECKS: string[] = ['Secure payment', 'Free cancellation', 'Verified local agency'];
-
 /**
  * Fallback for when the Shopify `footer` menu is empty or unreachable.
  * Note the anchors here are historical dead links (#reviews / #faq / #about
@@ -32,12 +30,6 @@ const FALLBACK_NAV_LINKS: NavLink[] = [
   {label: 'FAQ', href: '/faq'},
   {label: 'About', href: '/about'},
   {label: 'Contact', href: '/contact'},
-];
-
-const LEGAL_LINKS: NavLink[] = [
-  {label: 'Terms', href: '#terms'},
-  {label: 'Privacy', href: '#privacy'},
-  {label: 'Refund Policy', href: '#refund'},
 ];
 
 const SOCIAL_LINKS: SocialLink[] = [
@@ -81,9 +73,10 @@ export function SiteFooter({
     t('footer.check_3', 'Verified local agency'),
   ];
   const legalLinks = [
-    {label: t('footer.legal_terms', 'Terms'), href: '#terms'},
-    {label: t('footer.legal_privacy', 'Privacy'), href: '#privacy'},
-    {label: t('footer.legal_refund', 'Refund Policy'), href: '#refund'},
+    // Pages for the policies written in Admin › Settings › Policies.
+    {label: t('footer.legal_terms', 'Terms'), href: '/policies/terms-of-service'},
+    {label: t('footer.legal_privacy', 'Privacy'), href: '/policies/privacy-policy'},
+    {label: t('footer.legal_refund', 'Refund Policy'), href: '/policies/refund-policy'},
   ];
 
   // Contact links come from site_settings. Anything still blank in Admin is

@@ -1,5 +1,6 @@
 import {useState, useCallback, useRef} from 'react';
 import {useT} from '~/lib/ui-strings';
+import {useModal} from '~/lib/use-modal';
 
 type IconName = 'check' | 'star' | 'heart';
 
@@ -149,9 +150,11 @@ function VideoModal({poster, videoUrl, onClose}: VideoModalProps) {
   const setVideoRef = useCallback((el: HTMLVideoElement | null) => {
     el?.play().catch(() => {});
   }, []);
+  const dialogRef = useModal<HTMLDivElement>(onClose);
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={t('aria.trust.video', 'Excursion video')}
@@ -176,6 +179,7 @@ function VideoModal({poster, videoUrl, onClose}: VideoModalProps) {
           type="button"
           aria-label={t('aria.trust.close_video', 'Close video')}
           onClick={onClose}
+          data-modal-close
           className="absolute right-3.5 top-3.5 flex h-10 w-10 items-center justify-center
                      rounded-full bg-sand/15 text-sand text-xl hover:bg-sand/25 btn-smooth">
           ×

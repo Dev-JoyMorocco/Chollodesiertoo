@@ -30,6 +30,7 @@ import {
   mapBookingFaqs,
   mapPriceIncludes,
   mapRoutePrices,
+  mapTourVariantIds,
   mapPageSections,
   mapBookingExtras,
   mapBookingTransfer,
@@ -126,6 +127,8 @@ export async function loader({context, request}: LoaderFunctionArgs) {
     // through t() so it translates with everything else.
     extras:       mapBookingExtras(quadRes, 'Per quad'),
     transfer:     mapBookingTransfer(transferRes),
+    // This store's tour variants, so checkout never uses another store's ids.
+    tourVariantIds: mapTourVariantIds(productRes),
     // Sent with every cart line as `_tour_type` for the booking backend.
     tourType:     resolveTourType(productRes, settings?.tourType),
   };
@@ -333,6 +336,7 @@ export default function BookPage() {
     extras,
     transfer,
     tourType,
+    tourVariantIds,
   } = useLoaderData<typeof loader>();
 
   return (
@@ -355,6 +359,7 @@ export default function BookPage() {
           extras={extras.length ? extras : undefined}
           transfer={transfer ?? undefined}
           tourType={tourType}
+          tourVariantIds={tourVariantIds}
         />
         <Testimonials reviews={reviews.length ? reviews : undefined} />
       </main>

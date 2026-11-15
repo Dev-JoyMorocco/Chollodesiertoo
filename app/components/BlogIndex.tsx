@@ -87,7 +87,7 @@ export function BlogIndex({
         {/* ── Category filter — only worth showing when posts carry tags ── */}
         {categories.length > 0 && (
           <div
-            role="tablist"
+            role="group"
             aria-label={t('aria.blog.filter', 'Filter stories')}
             className="mb-10 mt-15 flex flex-wrap justify-center gap-5"
           >
@@ -97,8 +97,7 @@ export function BlogIndex({
                 <button
                   key={c}
                   type="button"
-                  role="tab"
-                  aria-selected={on}
+                  aria-pressed={on}
                   onClick={() => {
                     setActive(c);
                     setShown(pageSize);

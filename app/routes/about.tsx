@@ -104,7 +104,7 @@ export default function AboutPage() {
   return (
     <>
       <SiteNavbar />
-      <main>
+      <main id="main-content">
         <AboutHero
           heroImage={hero?.image?.url || undefined}
           heroImageAlt={hero?.image?.alt || undefined}

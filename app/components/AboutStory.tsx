@@ -122,7 +122,7 @@ export function AboutStory({
           <span aria-hidden="true" className="absolute -bottom-20 left-0 md:left-5 font-display text-9xl text-primary/5">
             &ldquo;
           </span>
-          <span aria-hidden="true" className="absolute -bottom-20 right-0 md:right- 5 font-display text-9xl text-primary/5">
+          <span aria-hidden="true" className="absolute -bottom-20 right-0 md:right-5 font-display text-9xl text-primary/5">
             &rdquo;
           </span>
           <blockquote className="text-base font-bold text-dark md:text-[clamp(0.6rem,1.8vw,0.875rem)]">

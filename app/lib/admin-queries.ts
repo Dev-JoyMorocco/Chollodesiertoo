@@ -186,6 +186,7 @@ export const SF_TOUR_PRODUCT_QUERY = `#graphql
       productType
       variants(first: 100) {
         nodes {
+          id
           price { amount currencyCode }
           selectedOptions { name value }
         }
@@ -250,6 +251,8 @@ export const SF_SITE_SETTINGS_QUERY = `#graphql
     # domain, not the myshopify one.
     # name is the site name — the logo's alt text when brand_name is blank.
     shop { name primaryDomain { host } }
+    # The store's default language (Admin › Settings › Languages), for <html lang>.
+    localization { language { isoCode } }
     metaobjects(type: "site_settings", first: 1) {
       nodes {
         id
@@ -739,6 +742,17 @@ export function shopName(data: unknown): string {
   return ((data as any)?.shop?.name as string) ?? '';
 }
 
+/**
+ * The store's default language as an HTML lang code ("ES" → "es", "PT_BR" →
+ * "pt-BR"), or "en" if it could not be read.
+ */
+export function shopLanguage(data: unknown): string {
+  const iso = (data as any)?.localization?.language?.isoCode as string | undefined;
+  if (!iso) return 'en';
+  const [lang, region] = iso.split('_');
+  return region ? `${lang.toLowerCase()}-${region}` : lang.toLowerCase();
+}
+
 /** Reads the shop's primary domain host out of a SF_SITE_SETTINGS_QUERY result. */
 export function primaryDomainHost(data: unknown): string {
   return ((data as any)?.shop?.primaryDomain?.host as string) ?? '';
@@ -795,6 +809,26 @@ export function mapRoutePrices(data: unknown): Record<string, number> {
     if (!route || !Number.isFinite(amount)) continue;
     const handle = route.toLowerCase().replace(/\s+/g, '-');
     if (out[handle] === undefined || amount < out[handle]) out[handle] = amount;
+  }
+  return out;
+}
+
+/**
+ * The tour variant for each route × camp tier, keyed `${routeHandle}-${campHandle}`
+ * like the booking form: "Classic Loop" + "Shared Camp" → `classic-loop-shared`.
+ * Read from the store's own product, so every store books its own variants.
+ */
+export function mapTourVariantIds(data: unknown): Record<string, string> {
+  const variants: any[] = (data as any)?.product?.variants?.nodes ?? [];
+  const slug = (s: string) =>
+    s.toLowerCase().replace(/\s+camp$/, '').trim().replace(/\s+/g, '-');
+  const out: Record<string, string> = {};
+  for (const v of variants) {
+    const opt = (name: string) =>
+      v?.selectedOptions?.find((o: any) => o.name === name)?.value as string | undefined;
+    const route = opt('Route');
+    const camp = opt('Camp Tier');
+    if (route && camp && v?.id) out[`${slug(route)}-${slug(camp)}`] = v.id as string;
   }
   return out;
 }

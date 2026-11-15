@@ -20,8 +20,9 @@ import {
   mapMenu,
   primaryDomainHost,
   shopName,
+  shopLanguage,
 } from '~/lib/admin-queries';
-import {UI_STRINGS_QUERY, mapUiStrings} from '~/lib/ui-strings';
+import {UI_STRINGS_QUERY, mapUiStrings, useT} from '~/lib/ui-strings';
 
 export type RootLoader = typeof loader;
 
@@ -71,6 +72,8 @@ export async function loader({context}: LoaderFunctionArgs) {
     siteSettings: mapSiteSettings(settingsRes),
     /** Store name from Shopify — the site name wherever brand_name is blank. */
     shopName: shopName(settingsRes),
+    /** The store's default language, so each store declares its own. */
+    language: shopLanguage(settingsRes),
     uiStrings: mapUiStrings(uiStringsRes),
     mainMenu: mapMenu(menuRes, internalHosts),
     footerMenu: mapMenu(footerMenuRes, internalHosts),
@@ -91,8 +94,9 @@ export async function loader({context}: LoaderFunctionArgs) {
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>('root');
+  const t = useT();
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang={data?.language || 'en'} className="scroll-smooth">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -113,6 +117,10 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <Links />
       </head>
       <body>
+        {/* Every page's <main> has id="main-content". */}
+        <a href="#main-content" className="skip-link">
+          {t('aria.skip_to_content', 'Skip to content')}
+        </a>
         {data?.shop ? (
           <Analytics.Provider cart={data.cart} shop={data.shop} consent={data.consent}>
             {children}

@@ -340,7 +340,13 @@ const STRINGS = {
   'contact.field_email':     ['Email', 'Contact — Email field', CONTACT, 'Message form'],
   'contact.field_message':   ['Message', 'Contact — Message field', CONTACT, 'Message form'],
   'contact.form_cta':        ['Send message', 'Contact — Form button', CONTACT, 'Message form'],
-  'contact.form_disabled':   ['This form isn’t connected yet — please use WhatsApp for now.', 'Contact — Form notice', CONTACT, 'The form has no backend yet'],
+  'contact.form_sending':    ['Sending…', 'Contact — Button while sending', CONTACT, 'Message form'],
+  'contact.form_sent_heading':['Message sent.', 'Contact — Sent heading', CONTACT, 'Replaces the form after sending'],
+  'contact.form_sent_body':  ['Thank you — we’ll reply by email as soon as we can.', 'Contact — Sent text', CONTACT, 'Replaces the form after sending'],
+  'contact.form_failed':     ['Your message could not be sent. Please try again, or message us on WhatsApp.', 'Contact — Send failed', CONTACT, 'Message form'],
+  'contact.error_name':      ['Please enter your name.', 'Contact — Name error', CONTACT, 'Message form'],
+  'contact.error_email':     ['Please enter a valid email address.', 'Contact — Email error', CONTACT, 'Message form'],
+  'contact.error_message':   ['Please write a message (at least 10 characters).', 'Contact — Message error', CONTACT, 'Message form'],
 
   // ── Video & media ──
   'media.video_preview':     ['Video preview', 'Video — Placeholder', MEDIA, 'Shown when a section has a photo but no video'],
@@ -401,6 +407,8 @@ const STRINGS = {
   'aria.reviews.hero':       ['Traveler reviews', 'Reviews — Hero section', SR, SR_NOTE],
   'aria.blog.hero':          ['Journal', 'Journal — Hero section', SR, SR_NOTE],
   'aria.contact.whatsapp':   ['Chat with us on WhatsApp', 'Contact — WhatsApp button', SR, SR_NOTE],
+  'aria.skip_to_content':    ['Skip to content', 'Every page — Skip link', SR, 'Appears on the first Tab press'],
+  'aria.policy.body':        ['Policy', 'Policy pages — Text', SR, SR_NOTE],
   'booking.aria_form':       ['Booking form', 'Booking form', SR, SR_NOTE],
   'booking.aria_summary':    ['Your trip summary', 'Trip summary panel', SR, SR_NOTE],
   'booking.aria_prev_month': ['Previous month', 'Calendar — Previous', SR, SR_NOTE],

@@ -70,6 +70,9 @@ export function Testimonials({
 
   useEffect(() => {
     if (!autoplayMs || pageCount < 2) return;
+    // Moving content without a pause control is a problem for some visitors;
+    // honour the OS "reduce motion" setting by not auto-advancing at all.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const id = window.setInterval(() => {
       if (!paused.current) setPage((p) => p + 1);
     }, autoplayMs);
@@ -94,6 +97,11 @@ export function Testimonials({
           className="overflow-hidden"
           onMouseEnter={() => (paused.current = true)}
           onMouseLeave={() => (paused.current = false)}
+          // Keyboard users get the same pause while focus is inside.
+          onFocus={() => (paused.current = true)}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node | null)) paused.current = false;
+          }}
         >
           <div
             ref={trackRef}

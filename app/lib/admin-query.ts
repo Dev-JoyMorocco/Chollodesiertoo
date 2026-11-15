@@ -1,6 +1,9 @@
-// RETIRED — nothing in the app imports this any more. Content now goes through
-// context.storefront.query(); see app/lib/admin-queries.ts. Kept only because it
-// is not yet committed to git; safe to delete once it is.
+// Used by the contact form (app/routes/contact.tsx) to save messages as
+// `contact_message` metaobject entries. Content reads go through
+// context.storefront.query() instead; see app/lib/admin-queries.ts.
+//
+// Needs SHOPIFY_ADMIN_ACCESS_TOKEN in the store's Oxygen environment variables,
+// from a custom app with the write_metaobjects scope.
 //
 // Historical note — Admin API content reads, only because the Storefront API is
 // unavailable on this dev store (no active paid plan, PUBLIC_STOREFRONT_API_TOKEN
@@ -15,7 +18,7 @@
 // runs in a worker where `process` only exists at build time (see env.d.ts), so
 // the env has to come from the loader's `context.env`.
 
-const API_VERSION = '2025-01';
+const API_VERSION = '2026-07';
 
 export type AdminEnv = {
   // The scripts in scripts/ set SHOPIFY_STORE_DOMAIN inline; .env only defines

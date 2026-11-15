@@ -1,5 +1,5 @@
-import {useLoaderData} from 'react-router';
-import type {LoaderFunctionArgs, MetaFunction} from 'react-router';
+import {data, useFetcher, useLoaderData} from 'react-router';
+import type {ActionFunctionArgs, LoaderFunctionArgs, MetaFunction} from 'react-router';
 import {SiteNavbar} from '~/components/SiteNavbar';
 import {PageHero} from '~/components/PageHero';
 import {SiteFooter} from '~/components/SiteFooter';
@@ -11,6 +11,7 @@ import {
 } from '~/lib/admin-queries';
 import {useT} from '~/lib/ui-strings';
 import {metaT} from '~/lib/ui-strings';
+import {adminQuery} from '~/lib/admin-query';
 
 export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
   const t = metaT(matches);
@@ -47,6 +48,77 @@ export async function loader({context}: LoaderFunctionArgs) {
     social: sections['contact.social'] ?? null,
     form: sections['contact.form'] ?? null,
   };
+}
+
+// ── Contact form ─────────────────────────────────────────────────────────────
+// Each message is saved in Shopify as a `contact_message` metaobject entry
+// (Admin › Content › Metaobjects › Contact Message), through the Admin API, so
+// messages stay in Shopify with no third-party service.
+
+const CONTACT_MESSAGE_CREATE = `
+  mutation ContactMessageCreate($metaobject: MetaobjectCreateInput!) {
+    metaobjectCreate(metaobject: $metaobject) {
+      metaobject { id }
+      userErrors { field message }
+    }
+  }
+`;
+
+type ContactField = 'name' | 'email' | 'message';
+type ContactResult = {
+  ok?: boolean;
+  /** Which fields failed validation; the page shows its own translated text. */
+  fieldErrors?: Partial<Record<ContactField, true>>;
+  /** The message could not be saved (server or setup problem). */
+  failed?: boolean;
+};
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export async function action({request, context}: ActionFunctionArgs) {
+  const form = await request.formData();
+
+  // Honeypot: hidden from people, filled in by spam bots. Pretend it worked.
+  if (String(form.get('company') ?? '')) {
+    return data<ContactResult>({ok: true});
+  }
+
+  const name = String(form.get('name') ?? '').trim();
+  const email = String(form.get('email') ?? '').trim();
+  const message = String(form.get('message') ?? '').trim();
+
+  const fieldErrors: ContactResult['fieldErrors'] = {};
+  if (!name || name.length > 100) fieldErrors.name = true;
+  if (!EMAIL_RE.test(email) || email.length > 200) fieldErrors.email = true;
+  if (message.length < 10 || message.length > 5000) fieldErrors.message = true;
+  if (Object.keys(fieldErrors).length) {
+    return data<ContactResult>({fieldErrors}, {status: 400});
+  }
+
+  try {
+    const result = await adminQuery<{
+      metaobjectCreate: {userErrors: Array<{message: string}>};
+    }>(context.env, CONTACT_MESSAGE_CREATE, {
+      metaobject: {
+        type: 'contact_message',
+        fields: [
+          {key: 'name', value: name},
+          {key: 'email', value: email},
+          {key: 'message', value: message},
+          {key: 'submitted_at', value: new Date().toISOString()},
+        ],
+      },
+    });
+    if (result.metaobjectCreate.userErrors.length) {
+      console.error('Contact message rejected:', result.metaobjectCreate.userErrors);
+      return data<ContactResult>({failed: true}, {status: 500});
+    }
+  } catch (error) {
+    console.error('Contact message failed:', error);
+    return data<ContactResult>({failed: true}, {status: 500});
+  }
+
+  return data<ContactResult>({ok: true});
 }
 
 export default function ContactPage() {
@@ -157,84 +229,17 @@ export default function ContactPage() {
               </article>
             </div>
 
-            {/* Message form.
-                NOT WIRED: there is no backend submission endpoint yet — no action
-                on this route, no email/CRM integration. The fields are structurally
-                correct and accessible so the form can be hooked up later, but
-                submitting currently does nothing. Wiring it is a future task. */}
-            <form
-              className="mt-6 rounded-card bg-white p-8 shadow-card"
-              onSubmit={(e) => e.preventDefault()}
-              aria-describedby="contact-form-note"
-            >
-              <h2 className="font-display text-price text-dark">
-                {form?.heading || t('contact.form_heading', 'Send a message')}
-              </h2>
-              <p id="contact-form-note" className="mt-3 text-base leading-relaxed text-dark/80">
-                {form?.body[0] ||
-                  t(
-                    'contact.form_body',
-                    'Prefer email? Use the form \u2014 or message us on WhatsApp for a faster reply.',
-                  )}
-              </p>
-
-              <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="contact-name" className="text-label font-bold text-dark">
-                    {t('contact.field_name', 'Name')}
-                  </label>
-                  <input
-                    id="contact-name"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    className="rounded-xl border border-dark/15 bg-white px-4 py-3 text-base text-dark
-                               outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30"
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="contact-email" className="text-label font-bold text-dark">
-                    {t('contact.field_email', 'Email')}
-                  </label>
-                  <input
-                    id="contact-email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    className="rounded-xl border border-dark/15 bg-white px-4 py-3 text-base text-dark
-                               outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-5 flex flex-col gap-1.5">
-                <label htmlFor="contact-message" className="text-label font-bold text-dark">
-                  {t('contact.field_message', 'Message')}
-                </label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  rows={5}
-                  className="rounded-xl border border-dark/15 bg-white px-4 py-3 text-base text-dark
-                             outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled
-                className="mt-6 inline-flex items-center gap-2.5 rounded-full px-7 py-3
-                           font-display text-btn text-sand btn-primary disabled:opacity-50"
-              >
-                {form?.labelPrimary || t('contact.form_cta', 'Send message')}
-              </button>
-              <p className="mt-3 text-label text-dark/60">
-                {t(
-                  'contact.form_disabled',
-                  'This form isn\u2019t connected yet \u2014 please use WhatsApp for now.',
-                )}
-              </p>
-            </form>
+            <ContactForm
+              heading={form?.heading || t('contact.form_heading', 'Send a message')}
+              intro={
+                form?.body[0] ||
+                t(
+                  'contact.form_body',
+                  'Prefer email? Use the form \u2014 or message us on WhatsApp for a faster reply.',
+                )
+              }
+              submitLabel={form?.labelPrimary || t('contact.form_cta', 'Send message')}
+            />
           </div>
         </section>
       </main>
@@ -244,6 +249,144 @@ export default function ContactPage() {
 }
 
 // ── Sub-components (mirrors the icon set used across the site) ───────────────
+
+const FIELD_CLASS =
+  'rounded-xl border border-dark/15 bg-white px-4 py-3 text-base text-dark outline-none ' +
+  'focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/30 ' +
+  'aria-invalid:border-error';
+
+/** Posts to this route's action; the message is saved in Shopify Admin. */
+function ContactForm({
+  heading,
+  intro,
+  submitLabel,
+}: {
+  heading: string;
+  intro: string;
+  submitLabel: string;
+}) {
+  const t = useT();
+  const fetcher = useFetcher<ContactResult>();
+  const sending = fetcher.state !== 'idle';
+  const result = fetcher.data;
+  const errors = result?.fieldErrors ?? {};
+
+  if (result?.ok) {
+    return (
+      <div role="status" className="mt-6 rounded-card bg-white p-8 shadow-card">
+        <h2 className="font-display text-price text-dark">
+          {t('contact.form_sent_heading', 'Message sent.')}
+        </h2>
+        <p className="mt-3 text-base leading-relaxed text-dark/80">
+          {t('contact.form_sent_body', 'Thank you \u2014 we\u2019ll reply by email as soon as we can.')}
+        </p>
+      </div>
+    );
+  }
+
+  const fieldError = (field: ContactField, text: string) =>
+    errors[field] ? (
+      <p id={`contact-${field}-error`} className="text-label text-error">
+        {text}
+      </p>
+    ) : null;
+
+  return (
+    <fetcher.Form
+      method="post"
+      noValidate
+      className="mt-6 rounded-card bg-white p-8 shadow-card"
+      aria-describedby="contact-form-note"
+    >
+      <h2 className="font-display text-price text-dark">{heading}</h2>
+      <p id="contact-form-note" className="mt-3 text-base leading-relaxed text-dark/80">
+        {intro}
+      </p>
+
+      {/* Honeypot for spam bots — hidden from people and screen readers. */}
+      <div aria-hidden="true" className="absolute -left-[9999px]">
+        <label htmlFor="contact-company">Company</label>
+        <input id="contact-company" name="company" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="contact-name" className="text-label font-bold text-dark">
+            {t('contact.field_name', 'Name')}
+          </label>
+          <input
+            id="contact-name"
+            name="name"
+            type="text"
+            autoComplete="name"
+            required
+            maxLength={100}
+            aria-invalid={errors.name || undefined}
+            aria-describedby={errors.name ? 'contact-name-error' : undefined}
+            className={FIELD_CLASS}
+          />
+          {fieldError('name', t('contact.error_name', 'Please enter your name.'))}
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="contact-email" className="text-label font-bold text-dark">
+            {t('contact.field_email', 'Email')}
+          </label>
+          <input
+            id="contact-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            maxLength={200}
+            aria-invalid={errors.email || undefined}
+            aria-describedby={errors.email ? 'contact-email-error' : undefined}
+            className={FIELD_CLASS}
+          />
+          {fieldError('email', t('contact.error_email', 'Please enter a valid email address.'))}
+        </div>
+      </div>
+
+      <div className="mt-5 flex flex-col gap-1.5">
+        <label htmlFor="contact-message" className="text-label font-bold text-dark">
+          {t('contact.field_message', 'Message')}
+        </label>
+        <textarea
+          id="contact-message"
+          name="message"
+          rows={5}
+          required
+          maxLength={5000}
+          aria-invalid={errors.message || undefined}
+          aria-describedby={errors.message ? 'contact-message-error' : undefined}
+          className={FIELD_CLASS}
+        />
+        {fieldError(
+          'message',
+          t('contact.error_message', 'Please write a message (at least 10 characters).'),
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={sending}
+        className="mt-6 inline-flex items-center gap-2.5 rounded-full px-7 py-3
+                   font-display text-btn text-sand btn-primary disabled:opacity-50"
+      >
+        {sending ? t('contact.form_sending', 'Sending\u2026') : submitLabel}
+      </button>
+
+      {result?.failed && (
+        <p role="alert" className="mt-3 text-label text-error">
+          {t(
+            'contact.form_failed',
+            'Your message could not be sent. Please try again, or message us on WhatsApp.',
+          )}
+        </p>
+      )}
+    </fetcher.Form>
+  );
+}
+
 
 function WhatsAppIcon() {
   return (

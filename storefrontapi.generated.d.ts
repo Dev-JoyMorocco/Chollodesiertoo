@@ -88,12 +88,14 @@ export type SfTourProductQuery = {
   product?: StorefrontAPI.Maybe<
     Pick<StorefrontAPI.Product, 'id' | 'productType'> & {
       variants: {
-        nodes: Array<{
-          price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
-          selectedOptions: Array<
-            Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
-          >;
-        }>;
+        nodes: Array<
+          Pick<StorefrontAPI.ProductVariant, 'id'> & {
+            price: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
+            selectedOptions: Array<
+              Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
+            >;
+          }
+        >;
       };
     }
   >;
@@ -131,7 +133,10 @@ export type SfSiteSettingsQueryVariables = StorefrontAPI.Exact<{
 }>;
 
 export type SfSiteSettingsQuery = {
-  shop: {primaryDomain: Pick<StorefrontAPI.Domain, 'host'>};
+  shop: Pick<StorefrontAPI.Shop, 'name'> & {
+    primaryDomain: Pick<StorefrontAPI.Domain, 'host'>;
+  };
+  localization: {language: Pick<StorefrontAPI.Language, 'isoCode'>};
   metaobjects: {
     nodes: Array<
       Pick<StorefrontAPI.Metaobject, 'id' | 'handle'> & {
@@ -572,6 +577,13 @@ export type BlogArticleQuery = {
           seo?: StorefrontAPI.Maybe<
             Pick<StorefrontAPI.Seo, 'title' | 'description'>
           >;
+          heroImage?: StorefrontAPI.Maybe<{
+            reference?: StorefrontAPI.Maybe<{
+              image?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Image, 'url' | 'altText'>
+              >;
+            }>;
+          }>;
         }
       >;
     }
@@ -590,6 +602,60 @@ export type SfUiStringsQuery = {
   };
 };
 
+export type SitemapArticlesQueryVariables = StorefrontAPI.Exact<{
+  blogHandle: StorefrontAPI.Scalars['String']['input'];
+}>;
+
+export type SitemapArticlesQuery = {
+  blog?: StorefrontAPI.Maybe<{
+    articles: {
+      nodes: Array<Pick<StorefrontAPI.Article, 'handle' | 'publishedAt'>>;
+    };
+  }>;
+};
+
+export type SitemapPoliciesQueryVariables = StorefrontAPI.Exact<{
+  [key: string]: never;
+}>;
+
+export type SitemapPoliciesQuery = {
+  shop: {
+    privacyPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'handle' | 'body'>
+    >;
+    refundPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'handle' | 'body'>
+    >;
+    termsOfService?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'handle' | 'body'>
+    >;
+    shippingPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'handle' | 'body'>
+    >;
+  };
+};
+
+export type PoliciesQueryVariables = StorefrontAPI.Exact<{
+  [key: string]: never;
+}>;
+
+export type PoliciesQuery = {
+  shop: {
+    privacyPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'title' | 'body' | 'handle'>
+    >;
+    refundPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'title' | 'body' | 'handle'>
+    >;
+    termsOfService?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'title' | 'body' | 'handle'>
+    >;
+    shippingPolicy?: StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.ShopPolicy, 'title' | 'body' | 'handle'>
+    >;
+  };
+};
+
 interface GeneratedQueryTypes {
   '#graphql\n  query SfMenu($handle: String!) {\n    menu(handle: $handle) {\n      id\n      title\n      items { id title url }\n    }\n  }\n': {
     return: SfMenuQuery;
@@ -603,7 +669,7 @@ interface GeneratedQueryTypes {
     return: SfJourneyDaysQuery;
     variables: SfJourneyDaysQueryVariables;
   };
-  '#graphql\n  query SfTourProduct($handle: String!) {\n    product(handle: $handle) {\n      id\n      # The JoyPlatform backend reads productType as the tour-type fallback and\n      # expects Private / Shared (or a recognised translation).\n      productType\n      variants(first: 100) {\n        nodes {\n          price { amount currencyCode }\n          selectedOptions { name value }\n        }\n      }\n    }\n  }\n': {
+  '#graphql\n  query SfTourProduct($handle: String!) {\n    product(handle: $handle) {\n      id\n      # The JoyPlatform backend reads productType as the tour-type fallback and\n      # expects Private / Shared (or a recognised translation).\n      productType\n      variants(first: 100) {\n        nodes {\n          id\n          price { amount currencyCode }\n          selectedOptions { name value }\n        }\n      }\n    }\n  }\n': {
     return: SfTourProductQuery;
     variables: SfTourProductQueryVariables;
   };
@@ -611,7 +677,7 @@ interface GeneratedQueryTypes {
     return: SfAddonProductQuery;
     variables: SfAddonProductQueryVariables;
   };
-  '#graphql\n  query SfSiteSettings {\n    # primaryDomain rides along here so menu URLs can be internalised without a\n    # second round trip — Shopify resolves FRONTPAGE menu items to the primary\n    # domain, not the myshopify one.\n    shop { primaryDomain { host } }\n    metaobjects(type: "site_settings", first: 1) {\n      nodes {\n        id\n        handle\n        fields {\n          key\n          value\n          # GenericFile as well as MediaImage: Shopify stores an uploaded SVG\n          # as a GenericFile, and the logo and favicon are SVGs.\n          reference {\n            ... on MediaImage { image { url altText } }\n            ... on GenericFile { url }\n          }\n        }\n      }\n    }\n  }\n': {
+  '#graphql\n  query SfSiteSettings {\n    # primaryDomain rides along here so menu URLs can be internalised without a\n    # second round trip — Shopify resolves FRONTPAGE menu items to the primary\n    # domain, not the myshopify one.\n    # name is the site name — the logo\'s alt text when brand_name is blank.\n    shop { name primaryDomain { host } }\n    # The store\'s default language (Admin › Settings › Languages), for <html lang>.\n    localization { language { isoCode } }\n    metaobjects(type: "site_settings", first: 1) {\n      nodes {\n        id\n        handle\n        fields {\n          key\n          value\n          # GenericFile as well as MediaImage: Shopify stores an uploaded SVG\n          # as a GenericFile, and the logo and favicon are SVGs.\n          reference {\n            ... on MediaImage { image { url altText } }\n            ... on GenericFile { url }\n          }\n        }\n      }\n    }\n  }\n': {
     return: SfSiteSettingsQuery;
     variables: SfSiteSettingsQueryVariables;
   };
@@ -647,13 +713,25 @@ interface GeneratedQueryTypes {
     return: BlogArticlesQuery;
     variables: BlogArticlesQueryVariables;
   };
-  '#graphql\n  query BlogArticle($blogHandle: String!, $articleHandle: String!) {\n    blog(handle: $blogHandle) {\n      handle\n      articleByHandle(handle: $articleHandle) {\n        id\n        handle\n        title\n        contentHtml\n        excerpt\n        publishedAt\n        image { url altText }\n        authorV2 { name }\n        seo { title description }\n      }\n    }\n  }\n': {
+  '#graphql\n  query BlogArticle($blogHandle: String!, $articleHandle: String!) {\n    blog(handle: $blogHandle) {\n      handle\n      articleByHandle(handle: $articleHandle) {\n        id\n        handle\n        title\n        contentHtml\n        excerpt\n        publishedAt\n        image { url altText }\n        authorV2 { name }\n        seo { title description }\n        # Per-post hero background, set in Admin on the blog post itself.\n        heroImage: metafield(namespace: "custom", key: "hero_image") {\n          reference { ... on MediaImage { image { url altText } } }\n        }\n      }\n    }\n  }\n': {
     return: BlogArticleQuery;
     variables: BlogArticleQueryVariables;
   };
   '#graphql\n  query SfUiStrings {\n    metaobjects(type: "ui_string", first: 250) {\n      nodes { fields { key value } }\n    }\n  }\n': {
     return: SfUiStringsQuery;
     variables: SfUiStringsQueryVariables;
+  };
+  '#graphql\n  query SitemapArticles($blogHandle: String!) {\n    blog(handle: $blogHandle) {\n      articles(first: 250, sortKey: PUBLISHED_AT, reverse: true) {\n        nodes { handle publishedAt }\n      }\n    }\n  }\n': {
+    return: SitemapArticlesQuery;
+    variables: SitemapArticlesQueryVariables;
+  };
+  '#graphql\n  query SitemapPolicies {\n    shop {\n      privacyPolicy { handle body }\n      refundPolicy { handle body }\n      termsOfService { handle body }\n      shippingPolicy { handle body }\n    }\n  }\n': {
+    return: SitemapPoliciesQuery;
+    variables: SitemapPoliciesQueryVariables;
+  };
+  '#graphql\n  query Policies {\n    shop {\n      privacyPolicy { title body handle }\n      refundPolicy { title body handle }\n      termsOfService { title body handle }\n      shippingPolicy { title body handle }\n    }\n  }\n': {
+    return: PoliciesQuery;
+    variables: PoliciesQueryVariables;
   };
 }
 

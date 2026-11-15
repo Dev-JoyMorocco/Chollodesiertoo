@@ -83,7 +83,7 @@ export function SiteNavbar() {
 
         {/* ── Mobile / tablet dropdown ── */}
         {open && (
-          <div className="mx-auto w-full">
+          <div id="mobile-menu" className="mx-auto w-full">
             <div className="container pb-4">
               <div className="p-6 rounded-[1.5rem] bg-dark/90 border border-sand/10 backdrop-blur-md flex flex-col gap-1">
                 <ul className="flex flex-col gap-1 mb-4">
@@ -134,6 +134,7 @@ function HamburgerButton({ open, onClick }: { open: boolean; onClick: () => void
         open ? t('aria.nav.close_menu', 'Close menu') : t('aria.nav.open_menu', 'Open menu')
       }
       aria-expanded={open}
+      aria-controls="mobile-menu"
       className="flex flex-col justify-center items-center gap-1.5 w-10 h-10 rounded-full border border-sand/20 bg-white/10 backdrop-blur-md"
     >
       <span className={`block w-5 h-px bg-sand/80 transition-transform duration-200 ${open ? 'translate-y-2 rotate-45' : ''}`} />
