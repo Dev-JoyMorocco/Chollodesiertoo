@@ -1,6 +1,7 @@
 # Chollodesierto — Hydrogen storefront
 
-Shopify Hydrogen (2025.5) + React Router 7 (flatRoutes) + Tailwind v4. Deployed
+Shopify Hydrogen (2026.4.3, Storefront API 2026-04) + React Router 7.16 (flatRoutes,
+`hydrogenPreset` with middleware) + Tailwind v4 (pinned 4.3.3) + Vite 6. Deployed
 to Oxygen from GitHub (`main` → `.github/workflows/oxygen-deployment-*.yml`).
 The same code runs a second store; anything store-specific lives in Shopify
 Admin, not in code.
@@ -11,9 +12,14 @@ Admin, not in code.
   query fails it) and `npx tsc --noEmit` (0 errors — keep it that way). The unused
   Hydrogen template components (cart, search, header/footer, aside) were removed.
 - The Shopify AI Toolkit plugin (`shopify-plugin:shopify` skill) validates
-  GraphQL against Shopify's schema. It only knows supported API versions:
-  Hydrogen 2025.5 pins Storefront API 2025-04, which is out of support, so
-  validate against the oldest one it lists. `admin-query.ts` uses Admin API 2026-07.
+  GraphQL against Shopify's schema (validate Storefront queries with
+  `--version 2026-04`). `admin-query.ts` uses Admin API 2026-07.
+- Loader context comes from `createHydrogenRouterContext` (`app/lib/context.ts`);
+  its types come from `@shopify/hydrogen/react-router-types` (referenced in
+  `env.d.ts`). Extra context goes in `additionalContext`. Don't import from the
+  removed `@shopify/remix-oxygen`: use `react-router` / `@shopify/hydrogen`.
+- Tailwind and `@tailwindcss/vite` are pinned so upgrades can't change the CSS;
+  Vite stays on 6 (Vite 8 would pull a newer Tailwind).
 - No `.env` and no Admin API token locally, so Admin changes (metaobject
   definitions, fields, variants, entries) are done by the user in Shopify Admin.
   Give them exact steps instead of writing a script that cannot run.

@@ -1,12 +1,24 @@
 import {createHydrogenContext} from '@shopify/hydrogen';
 import {AppSession} from '~/lib/session';
 import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
+import type {CartApiQueryFragment} from 'storefrontapi.generated';
+
+// Extra properties for the loader context (CMS clients, SDKs, …). None yet.
+const additionalContext = {} as const;
+
+type AdditionalContextType = typeof additionalContext;
+
+declare global {
+  interface HydrogenAdditionalContext extends AdditionalContextType {}
+  // context.cart.get() and cart mutations return the codegen'd cart type.
+  interface HydrogenCustomCartFragment extends CartApiQueryFragment {}
+}
 
 /**
- * The context implementation is separate from server.ts
- * so that type can be extracted for AppLoadContext
+ * Builds the loader context (storefront, cart, session, env) for each request.
+ * Separate from server.ts so its type can be shared.
  * */
-export async function createAppLoadContext(
+export async function createHydrogenRouterContext(
   request: Request,
   env: Env,
   executionContext: ExecutionContext,
@@ -24,20 +36,20 @@ export async function createAppLoadContext(
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
-  const hydrogenContext = createHydrogenContext({
-    env,
-    request,
-    cache,
-    waitUntil,
-    session,
-    i18n: {language: 'EN', country: 'US'},
-    cart: {
-      queryFragment: CART_QUERY_FRAGMENT,
+  const hydrogenContext = createHydrogenContext(
+    {
+      env,
+      request,
+      cache,
+      waitUntil,
+      session,
+      i18n: {language: 'EN', country: 'US'},
+      cart: {
+        queryFragment: CART_QUERY_FRAGMENT,
+      },
     },
-  });
+    additionalContext,
+  );
 
-  return {
-    ...hydrogenContext,
-    // declare additional Remix loader context
-  };
+  return hydrogenContext;
 }

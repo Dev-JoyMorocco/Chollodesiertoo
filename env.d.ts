@@ -1,16 +1,15 @@
 /// <reference types="vite/client" />
 /// <reference types="react-router" />
 /// <reference types="@shopify/oxygen-workers-types" />
+/// <reference types="@shopify/hydrogen/react-router-types" />
 
 // Enhance TypeScript's built-in typings.
 import '@total-typescript/ts-reset';
 
-import type {
-  HydrogenContext,
-  HydrogenSessionData,
-  HydrogenEnv,
-} from '@shopify/hydrogen';
-import type {createAppLoadContext} from '~/lib/context';
+import type {HydrogenEnv} from '@shopify/hydrogen';
+
+// The loader context (storefront, cart, session, env) is typed by
+// @shopify/hydrogen/react-router-types; extra context goes in app/lib/context.ts.
 
 declare global {
   /**
@@ -19,30 +18,8 @@ declare global {
   const process: {env: {NODE_ENV: 'production' | 'development'}};
 
   interface Env extends HydrogenEnv {
-    // declare additional Env parameter use in the fetch handler and Remix loader context here
     // (PUBLIC_STOREFRONT_ID and PUBLIC_CHECKOUT_DOMAIN are already on HydrogenEnv)
     /** Admin API token (custom app, write_metaobjects) — the contact form saves messages with it. */
     SHOPIFY_ADMIN_ACCESS_TOKEN?: string;
-  }
-}
-
-declare module 'react-router' {
-  interface AppLoadContext
-    extends Awaited<ReturnType<typeof createAppLoadContext>> {
-    // to change context type, change the return of createAppLoadContext() instead
-  }
-
-  // TODO: remove this once we've migrated our loaders to `Route.LoaderArgs` 
-  interface LoaderFunctionArgs {
-    context: AppLoadContext;
-  }
-
-  // TODO: remove this once we've migrated our loaders to `Route.ActionArgs`
-  interface ActionFunctionArgs {
-    context: AppLoadContext;
-  }
-
-  interface SessionData extends HydrogenSessionData {
-    // declare local additions to the Remix session data here
   }
 }
