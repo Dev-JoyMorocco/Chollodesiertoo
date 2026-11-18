@@ -22,7 +22,7 @@ import {
   shopName,
   shopLanguage,
 } from '~/lib/admin-queries';
-import {UI_STRINGS_QUERY, mapUiStrings, useT} from '~/lib/ui-strings';
+import {loadUiStrings, useT, type UiStrings} from '~/lib/ui-strings';
 
 export type RootLoader = typeof loader;
 
@@ -62,7 +62,7 @@ export async function loader({context}: LoaderFunctionArgs) {
     storefront
       .query(SF_MENUS_QUERY, {variables: {handle: 'footer'}})
       .catch(() => null),
-    storefront.query(UI_STRINGS_QUERY).catch(() => null),
+    loadUiStrings(storefront).catch((): UiStrings => ({})),
   ]);
 
   // Both the myshopify domain and the primary domain count as "this site".
@@ -74,7 +74,7 @@ export async function loader({context}: LoaderFunctionArgs) {
     shopName: shopName(settingsRes),
     /** The store's default language, so each store declares its own. */
     language: shopLanguage(settingsRes),
-    uiStrings: mapUiStrings(uiStringsRes),
+    uiStrings: uiStringsRes,
     mainMenu: mapMenu(menuRes, internalHosts),
     footerMenu: mapMenu(footerMenuRes, internalHosts),
     cart: cart.get(),

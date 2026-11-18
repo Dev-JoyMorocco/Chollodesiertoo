@@ -96,7 +96,7 @@ export const CAMP_TIERS_QUERY = `#graphql
 
 export const FAQS_QUERY = `#graphql
   query Faqs {
-    metaobjects(type: "faq_item", first: 20) {
+    metaobjects(type: "faq_item", first: 50) {
       nodes {
         id
         fields { key value }
@@ -107,7 +107,7 @@ export const FAQS_QUERY = `#graphql
 
 export const REVIEWS_QUERY = `#graphql
   query Reviews {
-    metaobjects(type: "review", first: 20) {
+    metaobjects(type: "review", first: 50) {
       nodes {
         id
         fields { key value }
