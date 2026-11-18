@@ -12,14 +12,38 @@ import type {RootLoader} from '~/root';
  * the `ui_string` entries in that store's Admin. No code changes needed.
  */
 export const UI_STRINGS_QUERY = `#graphql
-  query SfUiStrings {
-    metaobjects(type: "ui_string", first: 250) {
+  query SfUiStrings($after: String) {
+    metaobjects(type: "ui_string", first: 250, after: $after) {
       nodes { fields { key value } }
+      pageInfo { hasNextPage endCursor }
     }
   }
 `;
 
 export type UiStrings = Record<string, string>;
+
+/** Pages of 250 fetched at most — 1,000 entries, far above today's ~265. */
+const MAX_UI_STRING_PAGES = 4;
+
+/**
+ * Loads every Website Text entry. The Storefront API returns at most 250 per
+ * request, and the site uses more than that, so this follows the pages —
+ * otherwise everything past the 250th entry silently fell back to English.
+ */
+export async function loadUiStrings(storefront: {
+  query: (query: string, options?: {variables?: Record<string, unknown>}) => Promise<any>;
+}): Promise<UiStrings> {
+  const out: UiStrings = {};
+  let after: string | null = null;
+  for (let page = 0; page < MAX_UI_STRING_PAGES; page++) {
+    const data = await storefront.query(UI_STRINGS_QUERY, {variables: {after}});
+    Object.assign(out, mapUiStrings(data));
+    const info = data?.metaobjects?.pageInfo;
+    if (!info?.hasNextPage) break;
+    after = info.endCursor;
+  }
+  return out;
+}
 
 export function mapUiStrings(data: unknown): UiStrings {
   const nodes: any[] = (data as any)?.metaobjects?.nodes ?? [];

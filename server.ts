@@ -1,7 +1,7 @@
 // Virtual entry point for the app
-import {storefrontRedirect} from '@shopify/hydrogen';
-import {createRequestHandler} from '@shopify/remix-oxygen';
-import {createAppLoadContext} from '~/lib/context';
+import * as serverBuild from 'virtual:react-router/server-build';
+import {createRequestHandler, storefrontRedirect} from '@shopify/hydrogen';
+import {createHydrogenRouterContext} from '~/lib/context';
 
 /**
  * Export a fetch handler in module format.
@@ -18,19 +18,18 @@ export default {
         return new Response(null, {status: 404});
       }
 
-      const appLoadContext = await createAppLoadContext(
+      const appLoadContext = await createHydrogenRouterContext(
         request,
         env,
         executionContext,
       );
 
       /**
-       * Create a Remix request handler and pass
-       * Hydrogen's Storefront client to the loader context.
+       * Hydrogen's request handler delegates to React Router and proxies the
+       * Storefront API on this domain (needed for Shopify's analytics cookies).
        */
       const handleRequest = createRequestHandler({
-        // eslint-disable-next-line import/no-unresolved
-        build: await import('virtual:react-router/server-build'),
+        build: serverBuild,
         mode: process.env.NODE_ENV,
         getLoadContext: () => appLoadContext,
       });

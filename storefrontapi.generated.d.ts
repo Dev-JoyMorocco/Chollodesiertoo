@@ -591,7 +591,7 @@ export type BlogArticleQuery = {
 };
 
 export type SfUiStringsQueryVariables = StorefrontAPI.Exact<{
-  [key: string]: never;
+  after?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars['String']['input']>;
 }>;
 
 export type SfUiStringsQuery = {
@@ -599,6 +599,7 @@ export type SfUiStringsQuery = {
     nodes: Array<{
       fields: Array<Pick<StorefrontAPI.MetaobjectField, 'key' | 'value'>>;
     }>;
+    pageInfo: Pick<StorefrontAPI.PageInfo, 'hasNextPage' | 'endCursor'>;
   };
 };
 
@@ -697,11 +698,11 @@ interface GeneratedQueryTypes {
     return: CampTiersQuery;
     variables: CampTiersQueryVariables;
   };
-  '#graphql\n  query Faqs {\n    metaobjects(type: "faq_item", first: 20) {\n      nodes {\n        id\n        fields { key value }\n      }\n    }\n  }\n': {
+  '#graphql\n  query Faqs {\n    metaobjects(type: "faq_item", first: 50) {\n      nodes {\n        id\n        fields { key value }\n      }\n    }\n  }\n': {
     return: FaqsQuery;
     variables: FaqsQueryVariables;
   };
-  '#graphql\n  query Reviews {\n    metaobjects(type: "review", first: 20) {\n      nodes {\n        id\n        fields { key value }\n      }\n    }\n  }\n': {
+  '#graphql\n  query Reviews {\n    metaobjects(type: "review", first: 50) {\n      nodes {\n        id\n        fields { key value }\n      }\n    }\n  }\n': {
     return: ReviewsQuery;
     variables: ReviewsQueryVariables;
   };
@@ -717,7 +718,7 @@ interface GeneratedQueryTypes {
     return: BlogArticleQuery;
     variables: BlogArticleQueryVariables;
   };
-  '#graphql\n  query SfUiStrings {\n    metaobjects(type: "ui_string", first: 250) {\n      nodes { fields { key value } }\n    }\n  }\n': {
+  '#graphql\n  query SfUiStrings($after: String) {\n    metaobjects(type: "ui_string", first: 250, after: $after) {\n      nodes { fields { key value } }\n      pageInfo { hasNextPage endCursor }\n    }\n  }\n': {
     return: SfUiStringsQuery;
     variables: SfUiStringsQueryVariables;
   };
